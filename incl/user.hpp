@@ -1,11 +1,8 @@
 #ifndef USER_HPP
 # define USER_HPP
 
-#include <cstring>
-#include <iostream>
-#include <vector>
-
-void split(std::vector<std::string>& dest, const std::string& str);
+# include "global.hpp"
+#define BUFFER_SIZE 4096
 
 class User
 {
@@ -18,7 +15,15 @@ private:
     bool is_nickname_passed;
     bool is_username_passed;
 
+    bool check_password( std::vector<std::string> cmd );
+    bool check_nickname( std::vector<std::string> cmd );
+    bool check_username( std::vector<std::string> cmd );
+
+    void buffer_copy( char command[] );
+
 public:
+    char buffer[BUFFER_SIZE];
+
     User(int fd);
 
     bool is_authorized( void );
@@ -30,8 +35,9 @@ public:
 
     std::string get_nickname( void );
     std::string get_username( void );
+    int get_fd( void );
 
-    void parse_command( std::string command );
+    void parse_command( char command[] );
     void authorize( std::vector<std::string> parsed );
 };
 

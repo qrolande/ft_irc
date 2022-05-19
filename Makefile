@@ -2,7 +2,7 @@ NAME	=	irc_serv
 
 SRCS	=	src/main.cpp src/server.cpp src/user.cpp src/utils.cpp
 
-INCL	=	incl/server.hpp incl/user.hpp
+INCL	=	incl/server.hpp incl/user.hpp incl/global.hpp
 
 OBJS	=	$(SRCS:.cpp=.o)
 
