@@ -10,6 +10,6 @@ int main(int argc, char **argv)
     }
     Server server;
     if (argc == 3)
-        server = Server(atoi(argv[1]), std::string(argv[2]));
+        server = Server(atoi(argv[1]));
     server.start();
 }

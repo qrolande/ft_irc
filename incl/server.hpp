@@ -17,7 +17,7 @@ public:
     static std::string password;
 
     Server();
-    Server(int port, std::string password);
+    Server(int port);
     void start();
     void main_loop(sockaddr_in address);
 

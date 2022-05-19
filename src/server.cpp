@@ -4,7 +4,7 @@
 
 Server::Server() : _port(8888), _count_connects(0) {} // TO DELETE
 
-Server::Server(int port, std::string password) : _port(port), _count_connects(0) {}
+Server::Server(int port) : _port(port), _count_connects(0) {}
 
 std::string Server::password = "";
 
@@ -57,7 +57,7 @@ void Server::main_loop(sockaddr_in address)
 		FD_SET(_listening, &readfds);  
 		_max_fd = _listening;  
 			 
-		for (int i = 0 ; i < client_socket.size(); i++)  
+		for (int i = 0, size = (int)client_socket.size() ; i < size; i++)  
 		{  
 			sd = client_socket[i];  
  
@@ -86,7 +86,7 @@ void Server::main_loop(sockaddr_in address)
 				 
 			bool t = false;
 			User *user = new User(new_socket);
-			for (int i = 0; i < client_socket.size(); i++)  
+			for (int i = 0, size = (int)client_socket.size(); i < size; i++)  
 			{  
 				if( client_socket[i] == 0 )  
 				{
@@ -105,7 +105,7 @@ void Server::main_loop(sockaddr_in address)
 			_count_connects++;
 		}
 
-		for (int i = 0, valread; i < client_socket.size(); i++)  
+		for (int i = 0, valread, size = (int)client_socket.size(); i < size; i++)  
 		{
 			User *user = &clients[i];
 			memset(buffer, 0, BUFFER_SIZE);

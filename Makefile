@@ -6,7 +6,7 @@ INCL	=	incl/server.hpp incl/user.hpp incl/global.hpp
 
 OBJS	=	$(SRCS:.cpp=.o)
 
-CFLAGS	=	#-Wall -Wextra -Werror
+CFLAGS	=	-Wall -Wextra -Werror
 
 CC		=	c++
 
