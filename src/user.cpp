@@ -63,7 +63,14 @@ void User::parse_command( char command[] )
     if (parsed.size() > 0)
     {
         if (!is_authorized())
+        {
             authorize(parsed);
+            if (is_authorized())
+            {
+                printf("NEW USER! [FD%d] NICKNAME: [%s]\n", _fd, _nickname.c_str());
+                send(_fd, "Authorization succesful\r\n", strlen("Authorization succesful\r\n"), 0);
+            }
+        }
         else {
             send(_fd, buffer, strlen(buffer), 0);
             send(_fd, "\n\r", 2, 0);
@@ -80,13 +87,10 @@ void User::authorize( std::vector<std::string> parsed )
         if (check_password(parsed))
             return;
     }
-    else if (!is_nickname_passed)
+    else if (!is_nickname_passed || !is_username_passed)
     {
         if (check_nickname(parsed))
             return;
-    }
-    else if (!is_username_passed)
-    {
         if (check_username(parsed))
             return;
     }
@@ -107,7 +111,7 @@ bool User::check_nickname(std::vector<std::string> cmd)
 {
     if (cmd.size() != 2 || cmd[1].length() == 0)
         return false;
-    if (cmd[0] != "NICK")
+    if (cmd[0] != "NICK" || is_nickname_passed)
         return false;
     this->_nickname = cmd[1];
     this->is_nickname_passed = true;
@@ -118,7 +122,7 @@ bool User::check_username(std::vector<std::string> cmd)
 {
     if (cmd.size() != 2 || cmd[1].length() == 0)
         return false;
-    if (cmd[0] != "USER")
+    if (cmd[0] != "USER" || is_username_passed)
         return false;
     this->_username = cmd[1];
     this->is_username_passed = true;
