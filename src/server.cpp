@@ -84,7 +84,7 @@ void Server::main_loop(sockaddr_in address)
 			printf("NEW CONNECTION [FD%d]\n", new_socket);  
 				 
 			bool t = false;
-			User *user = new User(new_socket);
+			User *user = new User(new_socket, this);
 			for (int i = 0, size = (int)client_socket.size(); i < size; i++)  
 			{  
 				if( client_socket[i] == 0 )  
@@ -124,4 +124,31 @@ void Server::main_loop(sockaddr_in address)
 			}
 		}
 	}
+}
+
+bool Server::is_nickname_available( std::string nickname )
+{
+	for (int i = 0; i < (int)clients.size(); i++)
+		if (client_socket[i] != 0)
+		{
+			if (clients[i].get_nickname() == nickname)
+				return false;
+		}
+	return true;
+}
+
+bool Server::is_username_available( std::string username )
+{
+	for (int i = 0; i < (int)clients.size(); i++)
+		if (client_socket[i] != 0)
+		{
+			if (clients[i].get_username() == username)
+				return false;
+		}
+	return true;
+}
+
+int Server::get_count_connects( void )
+{
+	return _count_connects;
 }

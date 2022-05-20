@@ -21,6 +21,11 @@ public:
     void start();
     void main_loop(sockaddr_in address);
 
+    bool is_nickname_available( std::string nickname );
+    bool is_username_available( std::string username );
+
+
+    int get_count_connects();
 };
 
 #endif

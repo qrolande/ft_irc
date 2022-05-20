@@ -2,7 +2,9 @@
 # define USER_HPP
 
 # include "global.hpp"
-#define BUFFER_SIZE 4096
+# define BUFFER_SIZE 4096
+
+class Server;
 
 class User
 {
@@ -10,21 +12,26 @@ private:
     int _fd;
     std::string _nickname;
     std::string _username;
+    std::string _realname;
 
     bool is_password_passed;
     bool is_nickname_passed;
     bool is_username_passed;
 
-    bool check_password( std::vector<std::string> cmd );
-    bool check_nickname( std::vector<std::string> cmd );
-    bool check_username( std::vector<std::string> cmd );
+    void check_password( std::vector<std::string> cmd );
+    void check_nickname( std::vector<std::string> cmd );
+    void check_username( std::vector<std::string> cmd );
 
     void buffer_copy( char command[] );
+
+    Server *server;
 
 public:
     char buffer[BUFFER_SIZE];
 
-    User(int fd);
+    User(int fd, Server *server);
+    User & operator=(const User &);
+
 
     bool is_authorized( void );
     void set_nickname( std::string nickname );
