@@ -50,7 +50,6 @@ void Server::main_loop(sockaddr_in address)
 	int addrlen = sizeof(address);
 	fd_set readfds;
 	char buffer[BUFFER_SIZE];
-
 	while(true)  
 	{   
 		FD_ZERO(&readfds);  

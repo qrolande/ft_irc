@@ -54,27 +54,36 @@ void User::buffer_copy( char command[] )
 void User::parse_command( char command[] )
 {
     buffer_copy(command);
-    int i = contains_new_line(this->buffer);
-    if (i == -1)
-        return;
-    this->buffer[i] = '\0';
-    std::vector<std::string> parsed;
-    split(parsed, this->buffer);
-    if (parsed.size() > 0)
+    for (int j = 0; buffer[j];)
     {
-        if (!is_authorized())
+        int i = contains_new_line(this->buffer + j);
+        if (i == -1)
+            return;
+        this->buffer[i + j] = '\0';
+        std::vector<std::string> parsed;
+        split(parsed, this->buffer + j);
+        std::cout << parsed[0] << "|" << parsed[1] << std::endl;
+        if (parsed.size() > 0)
         {
-            authorize(parsed);
-            if (is_authorized())
+            if (!is_authorized())
             {
-                printf("NEW USER! [FD%d] NICKNAME: [%s]\n", _fd, _nickname.c_str());
-                send(_fd, "Authorization succesful\r\n", strlen("Authorization succesful\r\n"), 0);
+                authorize(parsed);
+                if (is_authorized())
+                {
+                    printf("NEW USER! [FD%d] NICKNAME: [%s]\n", _fd, _nickname.c_str());
+                    send(_fd, ":ircserv 375 nickname : Message of the day -\r\n", strlen(":ircserv 375 nickname : Message of the day -\r\n"), 0);
+                    send(_fd, ":ircserv 372 nickname : ???\r\n", strlen(":ircserv 372 nickname : ???\r\n"), 0);
+                    send(_fd, ":ircserv 376 nickname : End of /MOTD command\r\n", strlen(":ircserv 376 nickname : End of /MOTD command\r\n"), 0);
+                    send(_fd, ":ircserv 001 username!username@localhost :Welcome to the IRCServ, username!username@localhost", strlen(":ircserv 001 asdcxz!asd123@localhost :Welcome to the IRCServ, asdcxz!asd123@localhost"), 0);
+                }
+            }
+            else {
+                send(_fd, buffer, strlen(buffer), 0);
+                send(_fd, "\r\n", 2, 0);
             }
         }
-        else {
-            send(_fd, buffer, strlen(buffer), 0);
-            send(_fd, "\n\r", 2, 0);
-        }
+        for (j = i + j + 1; buffer[j] == '\r' || buffer[j] == '\n'; j++);
+        parsed.clear();
     }
     memset(this->buffer, 0, 4096); //BUFFERSIZE
 }
@@ -94,7 +103,7 @@ void User::authorize( std::vector<std::string> parsed )
         if (check_username(parsed))
             return;
     }
-    send(_fd, "something went wrong\n\r", strlen("something went wrong\n\r"), 0);
+    send(_fd, "something went wrong\r\n", strlen("something went wrong\r\n"), 0);
 }
 
 bool User::check_password(std::vector<std::string> cmd)

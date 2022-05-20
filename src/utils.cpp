@@ -2,7 +2,7 @@
 
 void split(std::vector<std::string>& dest, const std::string& str)
 {
-    int i, j;
+    int j, i;
     for (i = 0; i < (int)str.length() && str[i] != ' '; i++);
     dest.push_back(str.substr(0, i++));
     for (j = i; j < (int)str.length(); j++);
@@ -10,8 +10,9 @@ void split(std::vector<std::string>& dest, const std::string& str)
         dest.push_back(str.substr(i, j));
 }
 
-int contains_new_line( char buffer[] )
+int contains_new_line( char buffer[])
 {
+    // std::cout << "|" << buffer[i] << "|" << std::endl;
     for (int i = 0; buffer[i] != '\0'; i++) {
         if (buffer[i] == '\r' || buffer[i] == '\n')
             return i;
