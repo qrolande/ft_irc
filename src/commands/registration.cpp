@@ -1,9 +1,5 @@
 #include "../../incl/global.hpp"
 
-void adam_sender(int fd, std::string message);
-void split(std::vector<std::string>& dest, int max_args);
-bool is_nickname_valid( const std::string& nick );
-
 void User::password_cmd(std::vector<std::string> cmd)
 {
     if (is_password_passed)

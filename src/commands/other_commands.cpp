@@ -1,7 +1,5 @@
 #include "../../incl/global.hpp"
 
-void adam_sender(int fd, std::string message);
-
 void User::ping_cmd( std::vector<std::string> cmd )
 {
     if (cmd.size() == 1)

@@ -1,8 +1,5 @@
 #include "../../incl/global.hpp"
 
-void split(std::vector<std::string>& dest, int max_args);
-void adam_sender(int fd, std::string message);
-
 void User::quit_cmd(std::vector<std::string> cmd)
 {
     cmd[0].clear();

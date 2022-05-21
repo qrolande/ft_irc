@@ -42,7 +42,8 @@ void adam_sender(int fd, std::string message)
     send(fd, "\r\n", 2, 0);
 }
 
-bool    is_nickname_valid( const std::string& nick ) {
+bool    is_nickname_valid( const std::string& nick )
+{
     const std::string spec = "-[]^{}";
     if (nick.length() > 9)
         return false;

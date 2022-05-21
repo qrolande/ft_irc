@@ -1,9 +1,5 @@
 #include "../incl/global.hpp"
 
-int contains_new_line(char buffer[]);
-void split(std::vector<std::string>& dest, const std::string& str);
-void adam_sender(int _fd, std::string message);
-
 User::User(int fd, Server *server) : _fd(fd), server(server) {
     _nickname = "user " + std::to_string(fd);
 }
