@@ -26,6 +26,7 @@ private:
     void username_cmd( std::vector<std::string> cmd );
     void quit_cmd( std::vector<std::string> cmd );
     void privmsg_cmd( std::vector<std::string> cmd );
+    void ping_cmd( std::vector<std::string> cmd );
 
     void buffer_copy( char command[] );
 

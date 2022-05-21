@@ -104,8 +104,10 @@ void User::work_with_command( std::vector<std::string> parsed )
             quit_cmd(parsed);
         else if (parsed[0] == "PRIVMSG")
             privmsg_cmd(parsed);
-        // else if (server->client_socket[i] != 0)
-        //     adam_sender(server->clients[i].get_fd(), _nickname + ": " + buffer);
+        else if (parsed[0] == "NICK")
+            nickname_cmd(parsed);
+        else if (parsed[0] == "PING")
+            ping_cmd(parsed);
         
         
         else

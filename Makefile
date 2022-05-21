@@ -1,6 +1,12 @@
 NAME	=	ircserv
 
-SRCS	=	src/main.cpp src/server.cpp src/user.cpp src/utils.cpp src/commands/registration.cpp src/commands/user_commands.cpp
+SRCS	=	src/main.cpp					\
+			src/server.cpp					\
+			src/user.cpp					\
+			src/utils.cpp					\
+			src/commands/registration.cpp	\
+			src/commands/user_commands.cpp	\
+			src/commands/other_commands.cpp
 
 INCL	=	incl/server.hpp incl/user.hpp incl/global.hpp
 
