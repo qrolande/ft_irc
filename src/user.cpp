@@ -4,7 +4,9 @@ int contains_new_line(char buffer[]);
 void split(std::vector<std::string>& dest, const std::string& str);
 void adam_sender(int _fd, std::string message);
 
-User::User(int fd, Server *server) : _fd(fd), server(server) {}
+User::User(int fd, Server *server) : _fd(fd), server(server) {
+    _nickname = "user " + std::to_string(fd);
+}
 
 User & User::operator=(const User & src)
 {
@@ -65,6 +67,7 @@ void User::buffer_copy( char command[] )
 void User::parse_command( char command[] )
 {
     buffer_copy(command);
+    // std::cout << command << std::endl;
     for (int j = 0; buffer[j];)
     {
         int i = contains_new_line(this->buffer + j);
@@ -74,39 +77,51 @@ void User::parse_command( char command[] )
         std::vector<std::string> parsed;
         split(parsed, this->buffer + j);
         if (parsed.size() > 0)
-        {
-            if (!is_authorized())
-            {
-                authorize(parsed);
-                if (is_authorized())
-                {
-                    printf("NEW USER! [FD%d] NICKNAME: [%s]\n", _fd, _nickname.c_str());
-                    adam_sender(_fd, RPL_MOTDSTART(_nickname));
-                    adam_sender(_fd, RPL_MOTD(_nickname, "???"));
-                    adam_sender(_fd, RPL_ENDOFMOTD(_nickname));
-                    adam_sender(_fd, RPL_WELCOME(_username));
-                }
-            }
-            else {
-                send(_fd, buffer, strlen(buffer), 0);
-                send(_fd, "\r\n", 2, 0);
-            }
-        }
+            work_with_command(parsed);
         for (j = i + j + 1; buffer[j] == '\r' || buffer[j] == '\n'; j++);
         parsed.clear();
     }
     memset(this->buffer, 0, 4096); //BUFFERSIZE
 }
 
+void User::work_with_command( std::vector<std::string> parsed )
+{
+    if (!is_authorized())
+    {
+        authorize(parsed);
+        if (is_authorized())
+        {
+            printf("NEW USER! [FD%d] NICKNAME: [%s]\n", _fd, _nickname.c_str());
+            adam_sender(_fd, RPL_MOTDSTART(_nickname));
+            adam_sender(_fd, RPL_MOTD(_nickname, "???"));
+            adam_sender(_fd, RPL_ENDOFMOTD(_nickname));
+            adam_sender(_fd, RPL_WELCOME(_username));
+        }
+    }
+    else
+    {
+        if (parsed[0] == "QUIT")
+            quit_cmd(parsed);
+        else if (parsed[0] == "PRIVMSG")
+            privmsg_cmd(parsed);
+        // else if (server->client_socket[i] != 0)
+        //     adam_sender(server->clients[i].get_fd(), _nickname + ": " + buffer);
+        
+        
+        else
+            adam_sender(_fd, ERR_UNKNOWNCOMMAND(_nickname, parsed[0]));
+    }
+}
+
 //добавить ошибки
 void User::authorize( std::vector<std::string> parsed )
 {
     if (parsed[0] == "PASS")
-        check_password(parsed);
+        password_cmd(parsed);
     else if (parsed[0] == "NICK")
-        check_nickname(parsed);
+        nickname_cmd(parsed);
     else if (parsed[0] == "USER")
-        check_username(parsed);
+        username_cmd(parsed);
     else
         adam_sender(_fd, ERR_UNKNOWNCOMMAND(_nickname, parsed[0]));
 }

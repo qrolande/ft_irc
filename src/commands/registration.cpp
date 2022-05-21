@@ -1,28 +1,31 @@
 #include "../../incl/global.hpp"
 
 void adam_sender(int fd, std::string message);
-void split(std::vector<std::string>& dest);
+void split(std::vector<std::string>& dest, int max_args);
+bool is_nickname_valid( const std::string& nick );
 
-void User::check_password(std::vector<std::string> cmd)
+void User::password_cmd(std::vector<std::string> cmd)
 {
     if (is_password_passed)
         adam_sender(_fd, ERR_ALREADYREGISTRED(_nickname));
     else if (cmd.size() == 1)
         adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, cmd[0]));
-    else if (cmd.size() != 2 || cmd[1] != Server::password)
+    else if (cmd.size() != 2 || !(cmd[1] == Server::password || (cmd[1][0] == ':' && cmd[1].substr(1) == Server::password)))
         adam_sender(_fd, ERR_PASSWDMISMATCH(_nickname));
     else
         is_password_passed = true;
 }
 
-void User::check_nickname(std::vector<std::string> cmd)
+void User::nickname_cmd(std::vector<std::string> cmd)
 {
-    if (cmd.size() == 1)
+    if (!is_password_passed)
+        adam_sender(_fd, ERR_NOTREGISTERED(_nickname));
+    else if (cmd.size() == 1)
         adam_sender(_fd, ERR_NONICKNAMEGIVEN(_nickname));
-    else if (0) //nick parser needed
+    else if (!is_nickname_valid(cmd[1]))
         adam_sender(_fd, ERR_ERRONEUSNICKNAME(_nickname, cmd[1]));
-    else if (!server->is_nickname_available(cmd[1]))
-        adam_sender(_fd, ERR_ALREADYREGISTRED(_nickname));
+    else if (server->is_nickname_available(cmd[1]) != -1)
+        adam_sender(_fd, ERR_NICKNAMEINUSE(_nickname, cmd[1]));
     else
     {
         this->_nickname = cmd[1];
@@ -30,9 +33,14 @@ void User::check_nickname(std::vector<std::string> cmd)
     }
 }
 
-void User::check_username(std::vector<std::string> cmd)
+void User::username_cmd(std::vector<std::string> cmd)
 {
-    split(cmd);
+    if (!is_password_passed)
+    {
+        adam_sender(_fd, ERR_NOTREGISTERED(_nickname));
+        return;
+    }
+    split(cmd, 4);
     if (cmd.size() != 4)
         adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, cmd[0]));
     else if (!server->is_username_available(cmd[0]))
@@ -40,7 +48,7 @@ void User::check_username(std::vector<std::string> cmd)
     else
     {
         this->_username = cmd[0];
-        this->_realname = cmd[3];
+        this->_realname = cmd[3][0] == ':' ? cmd[3].substr(1) : cmd[3];
         is_username_passed = true;
     }
 }

@@ -18,9 +18,14 @@ private:
     bool is_nickname_passed;
     bool is_username_passed;
 
-    void check_password( std::vector<std::string> cmd );
-    void check_nickname( std::vector<std::string> cmd );
-    void check_username( std::vector<std::string> cmd );
+    void work_with_command(std::vector<std::string> parsed);
+
+    //
+    void password_cmd( std::vector<std::string> cmd );
+    void nickname_cmd( std::vector<std::string> cmd );
+    void username_cmd( std::vector<std::string> cmd );
+    void quit_cmd( std::vector<std::string> cmd );
+    void privmsg_cmd( std::vector<std::string> cmd );
 
     void buffer_copy( char command[] );
 

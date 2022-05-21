@@ -56,7 +56,7 @@ void Server::main_loop(sockaddr_in address)
 		FD_SET(_listening, &readfds);  
 		_max_fd = _listening;  
 			 
-		for (int i = 0, size = (int)client_socket.size() ; i < size; i++)  
+		for (unsigned int i = 0, size = client_socket.size() ; i < size; i++)  
 		{  
 			sd = client_socket[i];  
  
@@ -85,13 +85,13 @@ void Server::main_loop(sockaddr_in address)
 				 
 			bool t = false;
 			User *user = new User(new_socket, this);
-			for (int i = 0, size = (int)client_socket.size(); i < size; i++)  
+			for (unsigned int i = 0, size = client_socket.size(); i < size; i++)  
 			{  
 				if( client_socket[i] == 0 )  
 				{
 					client_socket[i] = new_socket;  
 					t = true;
-					clients[i] = *user;
+					clients.insert(clients.begin() + i, *user);
 					break;  
 				}
 			}
@@ -104,7 +104,7 @@ void Server::main_loop(sockaddr_in address)
 			_count_connects++;
 		}
 
-		for (int i = 0, valread, size = (int)client_socket.size(); i < size; i++)  
+		for (unsigned int i = 0, valread, size = client_socket.size(); i < size; i++)  
 		{
 			User *user = &clients[i];
 			memset(buffer, 0, BUFFER_SIZE);
@@ -119,6 +119,7 @@ void Server::main_loop(sockaddr_in address)
 				}
 				else
 				{
+					std::cout << buffer << std::endl;
 					user->parse_command(buffer);
 				}
 			}
@@ -126,20 +127,20 @@ void Server::main_loop(sockaddr_in address)
 	}
 }
 
-bool Server::is_nickname_available( std::string nickname )
+int Server::is_nickname_available( std::string nickname )
 {
-	for (int i = 0; i < (int)clients.size(); i++)
+	for (unsigned int i = 0; i < clients.size(); i++)
 		if (client_socket[i] != 0)
 		{
 			if (clients[i].get_nickname() == nickname)
-				return false;
+				return i;
 		}
-	return true;
+	return -1;
 }
 
 bool Server::is_username_available( std::string username )
 {
-	for (int i = 0; i < (int)clients.size(); i++)
+	for (unsigned int i = 0; i < clients.size(); i++)
 		if (client_socket[i] != 0)
 		{
 			if (clients[i].get_username() == username)
