@@ -89,7 +89,31 @@ void User::work_with_command( std::vector<std::string> parsed )
         {
             printf("NEW USER! [FD%d] NICKNAME: [%s]\n", _fd, _nickname.c_str());
             adam_sender(_fd, RPL_MOTDSTART(_nickname));
-            adam_sender(_fd, RPL_MOTD(_nickname, "???"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠏⢀⣀⣤⣤⣤⣤⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⣿⣿⣿⣿⡿⣿⣴⢶⣶⣿⣟⣶⣿⣭⠿⠦⠤⠽⣷⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⣿⣿⡿⢫⣿⢋⣠⣿⣿⡶⢻⡏⠀⠀⠀⠀⠀⠀⠀⠉⠙⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⡿⠋⠈⣸⣿⣿⣿⡿⠿⠀⠈⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⢯⠋⠈⠀⣴⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠒⠀⠀⢰⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⢼⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⢀⡀⠤⠤⠤⣀⠀⢀⡀⠤⠤⠤⣀⣱⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⢸⣿⣿⣿⣿⣿⠀⠀⠀⢀⡖⠁⠀⠀⠀⠀⠀⠱⡏⠀⠀⠀⠀⠈⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠈⣿⣿⣿⣿⣿⡆⠀⠀⢸⠀⠀⠴⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠶⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⢀⡴⠋⠉⢹⡶⠶⢤"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣸⢻⡜⡄⠀⠀⠀⠀⠀⠀⢀⠶⠒⠒⠀⠐⣄⡼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⠟⠛⠓⠶⣏⠀⠀⣀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⢸⢧⣿⣿⣿⣿⣿⡿⠀⠷⠙⠲⠄⠀⡀⠠⠔⠁⠀⠀⠀⢀⣠⡇⡧⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⡇⠀⡀⠀⠀⠈⢦⠞⠁"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⢸⡈⢻⣿⣿⣿⡿⠧⣄⠀⠀⠀⢀⡴⠖⠒⠚⠛⠛⠛⠛⠉⠀⠈⠙⠦⣀⣠⣀⠀⠀⠀⠀⢰⣿⣿⣿⣿⠄⠀⠈⢢⡀⠠⢾⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⣴⣾⣿⣿⣿⢲⡶⡄⠀⢀⡶⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢁⠀⢸⠀⠀⠀⠀⣸⣿⣿⠟⠋⠀⠀⠀⡎⠀⠀⠈⠉⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⡀⠀⠀⠘⣿⣿⣿⣿⣿⣦⣤⡴⠀⣾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡷⢰⠃⠀⠀⣠⣾⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠙⢦⡀⠀⠈⠛⢻⣿⣿⣿⣿⡇⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢦⣀⣠⠎⢀⣤⣾⡿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠞⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠈⠳⢄⠀⢸⣿⣿⣿⣿⡇⠀⠙⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⠃⠀⣠⣴⣿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡰⠁⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⠈⠙⢾⣿⣿⣿⣿⡇⠀⠀⠈⠳⠤⣀⡀⠀⠀⢀⣀⠤⡖⠋⢀⡤⠾⠿⣏⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠎⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⠀⠀⠀⢨⠇⠙⢿⠷⠖⠒⠛⠓⠒⠚⠛⠯⡉⠉⠀⠀⡷⠶⠯⡁⠀⠀⠀⠙⠢⡀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠜⠁⠀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⠀⠀⢀⡌⠀⠀⠀⠳⡀⠀⠀⠀⠀⠀⡌⠀⠙⢆⠀⠀⡧⠂⠀⢡⠀⠀⠀⠀⠀⠈⠢⡀⠀⠀⠀⠀⢀⡔⠁⠀⠀⠀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⠀⢀⠌⠀⠀⠀⠀⠀⠰⡀⠀⠀⠀⢰⠃⠀⠀⠈⠣⡴⠉⠡⡀⠈⡆⠀⠀⠀⠀⠀⠀⠘⠄⠀⢀⡴⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⡠⠊⠀⠀⠀⠀⠀⠀⠀⢩⠉⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠱⡀⠁⠀⠀⠀⠀⠀⠀⠀⠈⣶⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⣷⣄⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢡⠀⠀⠀⠀⠀⠀⠀⠀⢠⠎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣎⡁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡆⠀⠀⠀⠀⢀⡠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⣿⣶⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⢤⡤⠴⠒⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+            adam_sender(_fd, RPL_MOTD(_nickname, "⠻⠿⢿⣿⣿⣿⣿⠏⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
             adam_sender(_fd, RPL_ENDOFMOTD(_nickname));
             adam_sender(_fd, RPL_WELCOME(_username));
         }
@@ -120,6 +144,8 @@ void User::authorize( std::vector<std::string> parsed )
         nickname_cmd(parsed);
     else if (parsed[0] == "USER")
         username_cmd(parsed);
+    else if (parsed[0] == "AWAY")
+        away_cmd(parsed);
     else
         adam_sender(_fd, ERR_UNKNOWNCOMMAND(_nickname, parsed[0]));
 }

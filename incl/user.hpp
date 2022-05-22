@@ -14,9 +14,12 @@ private:
     std::string _username;
     std::string _realname;
 
+    std::string away_message;
+
     bool is_password_passed;
     bool is_nickname_passed;
     bool is_username_passed;
+    bool is_away;
 
     void work_with_command(std::vector<std::string> parsed);
 
@@ -27,6 +30,7 @@ private:
     void quit_cmd( std::vector<std::string> cmd );
     void privmsg_cmd( std::vector<std::string> cmd );
     void ping_cmd( std::vector<std::string> cmd );
+    void away_cmd( std::vector<std::string> cmd );
 
     void buffer_copy( char command[] );
 

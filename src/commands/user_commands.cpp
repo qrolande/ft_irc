@@ -17,16 +17,29 @@ void User::privmsg_cmd(std::vector<std::string> cmd)
     split(cmd, 2);
     if (cmd[0][0] == ':')
         adam_sender(_fd, ERR_NORECIPIENT(_nickname, "PRIVMSG"));
+    else if (cmd.size() == 1)
+        adam_sender(_fd, ERR_NOTEXTTOSEND(_nickname));
     else if ((i = server->is_nickname_available(cmd[0])) == -1)
         adam_sender(_fd, ERR_NOSUCHNICK(_nickname, cmd[0]));
     else
     {
-        int fd = server->clients[i]._fd;
-        send(fd, ":", 1, 0);
-        send(fd, _nickname.c_str(), strlen(_nickname.c_str()), 0);
-        send(fd, " PRIVMSG ", 9, 0);
-        send(fd, server->clients[i]._nickname.c_str(), strlen(server->clients[i]._nickname.c_str()), 0);
-        adam_sender(fd, " :" + cmd[1].substr(1));
+        adam_sender(server->clients[i]._fd, RPL_PRIVMSG(_nickname,
+            cmd[0], cmd[1][0] == ':' ? cmd[1].substr(1) : cmd[1]));
     }
     
+}
+
+void User::away_cmd( std::vector<std::string> cmd )
+{
+    if (cmd.size() == 1)
+    {
+        adam_sender(_fd, RPL_UNAWAY(_nickname));
+        is_away = false;
+    }
+    else
+    {
+        adam_sender(_fd, RPL_NOWAWAY(_nickname));
+        is_away = true;
+        away_message = cmd[1];
+    }
 }
