@@ -1,8 +1,7 @@
 #ifndef USER_HPP
 # define USER_HPP
 
-# include "global.hpp"
-# define BUFFER_SIZE 4096
+#include "global.hpp"
 
 class Server;
 

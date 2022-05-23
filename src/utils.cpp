@@ -18,8 +18,11 @@ void split(std::vector<std::string>& dest, int max_args)
     for (unsigned int i = 0, j; i < tmp.length() && max_args != 0; max_args--)
     {
         for (j = i; tmp[j] && tmp[j] != ' '; j++);
-        if (max_args == 1)
+        if (max_args == 1 || tmp[i] == ':')
+        {
             dest.push_back(tmp.substr(i));
+            return;
+        }
         else
             dest.push_back(tmp.substr(i, j - i));
         for (; tmp[j] == ' '; j++);

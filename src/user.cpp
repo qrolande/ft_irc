@@ -128,8 +128,10 @@ void User::work_with_command( std::vector<std::string> parsed )
             nickname_cmd(parsed);
         else if (parsed[0] == "PING")
             ping_cmd(parsed);
-        
-        
+        else if (parsed[0] == "AWAY")
+            away_cmd(parsed);
+
+            
         else
             adam_sender(_fd, ERR_UNKNOWNCOMMAND(_nickname, parsed[0]));
     }
@@ -144,8 +146,6 @@ void User::authorize( std::vector<std::string> parsed )
         nickname_cmd(parsed);
     else if (parsed[0] == "USER")
         username_cmd(parsed);
-    else if (parsed[0] == "AWAY")
-        away_cmd(parsed);
     else
         adam_sender(_fd, ERR_UNKNOWNCOMMAND(_nickname, parsed[0]));
 }

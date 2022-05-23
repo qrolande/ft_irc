@@ -14,17 +14,26 @@ void User::quit_cmd(std::vector<std::string> cmd)
 void User::privmsg_cmd(std::vector<std::string> cmd)
 {
     int i;
-    split(cmd, 2);
+    std::string command = cmd[0];
+    split(cmd, -1);
     if (cmd[0][0] == ':')
-        adam_sender(_fd, ERR_NORECIPIENT(_nickname, "PRIVMSG"));
+        adam_sender(_fd, ERR_NORECIPIENT(_nickname, command));
     else if (cmd.size() == 1)
         adam_sender(_fd, ERR_NOTEXTTOSEND(_nickname));
+    // else if (cmd.size() > 2)
+    //     adam_sender(_fd, ERR_TOOMANYTARGETS(_nickname, ))
     else if ((i = server->is_nickname_available(cmd[0])) == -1)
         adam_sender(_fd, ERR_NOSUCHNICK(_nickname, cmd[0]));
+    else if (server->clients[i].is_away && command == "PRIVMSG")
+        adam_sender(_fd, RPL_AWAY(_nickname, cmd[0], server->clients[i].away_message));
     else
     {
-        adam_sender(server->clients[i]._fd, RPL_PRIVMSG(_nickname,
-            cmd[0], cmd[1][0] == ':' ? cmd[1].substr(1) : cmd[1]));
+        if (command == "PRIVMSG")
+            adam_sender(server->clients[i]._fd, RPL_PRIVMSG(_nickname,
+                cmd[0], cmd[1][0] == ':' ? cmd[1].substr(1) : cmd[1]));
+        else
+            adam_sender(server->clients[i]._fd, RPL_NOTICE(_nickname,
+                cmd[0], cmd[1][0] == ':' ? cmd[1].substr(1) : cmd[1]));
     }
     
 }
@@ -40,6 +49,6 @@ void User::away_cmd( std::vector<std::string> cmd )
     {
         adam_sender(_fd, RPL_NOWAWAY(_nickname));
         is_away = true;
-        away_message = cmd[1];
+        away_message = cmd[1][0] == ':' ? cmd[1].substr(1) : cmd[1];
     }
 }

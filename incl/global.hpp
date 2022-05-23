@@ -14,9 +14,12 @@
 #include <iostream>
 #include <vector>
 
+#define BUFFER_SIZE 500
+
 # include "user.hpp"
 # include "server.hpp"
 # include "utils.hpp"
+
 
 #define RPL_WELCOME(nickname)                           (":ircserv 001 " + (nickname) + " :Welcome to the IRCServ, " + (nickname))
 #define RPL_MOTDSTART(nickname)                         (":ircserv 375 " + (nickname) + " :- Message of the day -")
@@ -44,6 +47,7 @@
 
 #define RPL_QUIT(nickname, message)                     (":ircserv " + (nickname) + " quited :" + (message))
 #define RPL_PRIVMSG(sender, recipient, msg)             (":" + (sender) + " PRIVMSG " + (recipient) + " :"+ (msg))
+#define RPL_NOTICE(sender, recipient, msg)              (":" + (sender) + " NOTICE " + (recipient) + " :"+ (msg))
 #define RPL_JOIN(nickname, channel)                     (":" + (nickname) + " JOIN " + (channel))
 #define RPL_PART(nickname, channel, reason)             (":" + (nickname) + " PART " + (channel) + " :" + (reason))
 #define RPL_INVITING(nickname, nicknameInvited, channel)(":" + (nickname) + " INVITE " + (nicknameInvited) + " :" + (channel))

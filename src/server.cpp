@@ -1,9 +1,5 @@
 #include "../incl/global.hpp"
 
-#define BUFFER_SIZE 4096
-
-Server::Server() : _port(8888), _count_connects(0) {} // TO DELETE
-
 Server::Server(int port) : _port(port), _count_connects(0) {}
 
 std::string Server::password = "";

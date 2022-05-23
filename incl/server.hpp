@@ -6,17 +6,16 @@
 class Server
 {   
 private:
-    int         _port;
-    int         _listening;
-    int         _count_connects;
-    int         _max_fd;
-    std::string _password;
+    int                 _port;
+    int                 _listening;
+    int                 _count_connects;
+    int                 _max_fd;
+    std::string         _password;
 public:
-    static std::string password;
-    std::vector<int> client_socket;
-    std::vector<User> clients;
+    static std::string  password;
+    std::vector<int>    client_socket;
+    std::vector<User>   clients;
 
-    Server();
     Server(int port);
     void start();
     void main_loop(sockaddr_in address);
