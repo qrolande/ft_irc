@@ -1,6 +1,6 @@
 #include "../incl/global.hpp"
 
-User::User(int fd, Server *server) : _fd(fd), server(server) {
+User::User(int fd, Server *_server) : _fd(fd), server(_server) {
     _nickname = "user " + std::to_string(fd);
 }
 
@@ -130,7 +130,8 @@ void User::work_with_command( std::vector<std::string> parsed )
             ping_cmd(parsed);
         else if (parsed[0] == "AWAY")
             away_cmd(parsed);
-
+        else if (parsed[0] == "JOIN")
+            join_cmd(parsed);
             
         else
             adam_sender(_fd, ERR_UNKNOWNCOMMAND(_nickname, parsed[0]));

@@ -31,6 +31,10 @@ private:
     void ping_cmd( std::vector<std::string> cmd );
     void away_cmd( std::vector<std::string> cmd );
 
+    void join_cmd( std::vector<std::string> cmd );
+
+
+
     void buffer_copy( char command[] );
 
     Server *server;
@@ -38,7 +42,7 @@ private:
 public:
     char buffer[BUFFER_SIZE];
 
-    User(int fd, Server *server);
+    User(int fd, Server *_server);
     User & operator=(const User &);
 
 

@@ -51,9 +51,8 @@ void Server::main_loop(sockaddr_in address)
 		FD_ZERO(&readfds);  
 		FD_SET(_listening, &readfds);  
 		_max_fd = _listening;  
-			 
 		for (unsigned int i = 0, size = client_socket.size() ; i < size; i++)  
-		{  
+		{
 			sd = client_socket[i];  
  
 			if(sd > 0)  
@@ -65,8 +64,8 @@ void Server::main_loop(sockaddr_in address)
 	   
 		if (select(_max_fd + 1 , &readfds , NULL , NULL , NULL) < 0)
 		{  
-			printf("select error"); //ERROR
-		}  
+			printf("select error\n"); //ERROR
+		}
 			 
 		if (FD_ISSET(_listening, &readfds))  
 		{
@@ -85,9 +84,19 @@ void Server::main_loop(sockaddr_in address)
 			{  
 				if( client_socket[i] == 0 )  
 				{
-					client_socket[i] = new_socket;  
+					// std::vector<User>::iterator it = clients.begin();
+					// std::cout << "here" << std::endl;
+					client_socket[i] = new_socket;
 					t = true;
+					// std::cout << user->get_nickname() << std::endl;
+					// std::cout << clients[i].get_nickname() << std::endl;
+					// *(it + i) = *user;s
+					// clients[i] = *user;
 					clients.insert(clients.begin() + i, *user);
+					// std::cout << clients.size() << std::endl;
+					clients.erase(clients.begin() + i + 1);
+					// std::cout << clients.size() << std::endl;
+					std::cout << clients[i].get_nickname() << std::endl;
 					break;  
 				}
 			}
@@ -103,13 +112,13 @@ void Server::main_loop(sockaddr_in address)
 		for (unsigned int i = 0, valread, size = client_socket.size(); i < size; i++)  
 		{
 			User *user = &clients[i];
-			memset(buffer, 0, BUFFER_SIZE);
+			memset(buffer, '\0', BUFFER_SIZE);
 			if (FD_ISSET( user->get_fd() , &readfds))  
 			{
 				if ((valread = recv( user->get_fd() , buffer, BUFFER_SIZE, 0 )) <= 0)  
 				{
 					printf("[FD%d] DISCONNECTED\n", user->get_fd());
-					close(user->get_fd());  
+					close(user->get_fd());
 					client_socket[i] = 0;
 					_count_connects--;
 				}
@@ -133,6 +142,18 @@ int Server::is_nickname_available( std::string nickname )
 		}
 	return -1;
 }
+
+int Server::is_channel_available( std::string channel_name )
+{
+	for (unsigned int i = 0; i < channels.size(); i++)
+		if (channels[i] != nullptr)
+		{
+			if (channels[i]->get_channel_name() == channel_name)
+				return i;
+		}
+	return -1;
+}
+
 
 bool Server::is_username_available( std::string username )
 {

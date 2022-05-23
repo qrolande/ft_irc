@@ -20,6 +20,10 @@ void User::privmsg_cmd(std::vector<std::string> cmd)
         adam_sender(_fd, ERR_NORECIPIENT(_nickname, command));
     else if (cmd.size() == 1)
         adam_sender(_fd, ERR_NOTEXTTOSEND(_nickname));
+    else if (server->is_channel_available(cmd[0]) != -1)
+    {
+        server->channels[server->is_channel_available(cmd[0])]->send_all(*this, cmd[1][0] == ':' ? cmd[1].substr(1) : cmd[1], false);
+    }
     // else if (cmd.size() > 2)
     //     adam_sender(_fd, ERR_TOOMANYTARGETS(_nickname, ))
     else if ((i = server->is_nickname_available(cmd[0])) == -1)

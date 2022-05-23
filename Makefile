@@ -6,9 +6,11 @@ SRCS	=	src/main.cpp					\
 			src/utils.cpp					\
 			src/commands/registration.cpp	\
 			src/commands/user_commands.cpp	\
-			src/commands/other_commands.cpp
+			src/commands/other_commands.cpp	\
+			src/commands/channel_commands.cpp	\
+			src/channel.cpp
 
-INCL	=	incl/server.hpp incl/user.hpp incl/global.hpp
+INCL	=	incl/server.hpp incl/user.hpp incl/global.hpp incl/utils.hpp incl/channel.hpp
 
 OBJS	=	$(SRCS:.cpp=.o)
 

@@ -13,10 +13,12 @@
 #include <sys/time.h>
 #include <iostream>
 #include <vector>
+#include <list>
 
-#define BUFFER_SIZE 500
+#define BUFFER_SIZE 1024
 
 # include "user.hpp"
+# include "channel.hpp"
 # include "server.hpp"
 # include "utils.hpp"
 
