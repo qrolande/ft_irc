@@ -17,7 +17,7 @@ public:
 
     std::string get_channel_name( void );
     
-    void send_all( User user, std::string message, bool flag );
+    void send_all( User *user, std::string message, bool flag );
 };
 
 #endif

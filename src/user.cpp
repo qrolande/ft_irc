@@ -77,7 +77,7 @@ void User::parse_command( char command[] )
         for (j = i + j + 1; buffer[j] == '\r' || buffer[j] == '\n'; j++);
         parsed.clear();
     }
-    memset(this->buffer, 0, 4096); //BUFFERSIZE
+    memset(this->buffer, 0, BUFFER_SIZE);
 }
 
 void User::work_with_command( std::vector<std::string> parsed )
@@ -132,7 +132,9 @@ void User::work_with_command( std::vector<std::string> parsed )
             away_cmd(parsed);
         else if (parsed[0] == "JOIN")
             join_cmd(parsed);
-            
+
+
+
         else
             adam_sender(_fd, ERR_UNKNOWNCOMMAND(_nickname, parsed[0]));
     }

@@ -12,15 +12,15 @@ void Channel::add_user( int fd )
     channel_users.push_back(fd);
 }
 
-void Channel::send_all( User user, std::string message, bool flag )
+void Channel::send_all( User *user, std::string message, bool flag )
 {
     std::list<int>::iterator it;
     for (it = channel_users.begin(); it != channel_users.end(); ++it)
     {
-        if (*it != user.get_fd())
+        if (*it != user->get_fd())
         {
             if (!flag)
-                adam_sender(*it, RPL_PRIVMSG(user.get_nickname(), _channel_name, message));
+                adam_sender(*it, RPL_PRIVMSG(user->get_nickname(), _channel_name, message));
             else
                 adam_sender(*it, message);
         }

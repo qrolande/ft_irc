@@ -87,31 +87,34 @@ void Server::main_loop(sockaddr_in address)
 					// std::vector<User>::iterator it = clients.begin();
 					// std::cout << "here" << std::endl;
 					client_socket[i] = new_socket;
+					delete clients[i];
+					clients[i] = nullptr;
+					clients[i] = user;
 					t = true;
 					// std::cout << user->get_nickname() << std::endl;
 					// std::cout << clients[i].get_nickname() << std::endl;
-					// *(it + i) = *user;s
-					// clients[i] = *user;
-					clients.insert(clients.begin() + i, *user);
+					// // *(it + i) = *user;s
+					// // clients[i] = *user;
 					// std::cout << clients.size() << std::endl;
-					clients.erase(clients.begin() + i + 1);
+					// clients.erase(clients.begin() + i);
 					// std::cout << clients.size() << std::endl;
-					std::cout << clients[i].get_nickname() << std::endl;
+					// clients.insert(clients.begin() + i, *user);
+					// std::cout << clients[i].get_nickname() << std::endl;
 					break;  
 				}
 			}
 			if (!t)
 			{
 				client_socket.push_back(new_socket);
-				clients.push_back(*user);
+				clients.push_back(user);
 			}
-			delete user;
+			// delete user;
 			_count_connects++;
 		}
 
 		for (unsigned int i = 0, valread, size = client_socket.size(); i < size; i++)  
 		{
-			User *user = &clients[i];
+			User *user = clients[i];
 			memset(buffer, '\0', BUFFER_SIZE);
 			if (FD_ISSET( user->get_fd() , &readfds))  
 			{
@@ -137,7 +140,7 @@ int Server::is_nickname_available( std::string nickname )
 	for (unsigned int i = 0; i < clients.size(); i++)
 		if (client_socket[i] != 0)
 		{
-			if (clients[i].get_nickname() == nickname)
+			if (clients[i]->get_nickname() == nickname)
 				return i;
 		}
 	return -1;
@@ -160,7 +163,7 @@ bool Server::is_username_available( std::string username )
 	for (unsigned int i = 0; i < clients.size(); i++)
 		if (client_socket[i] != 0)
 		{
-			if (clients[i].get_username() == username)
+			if (clients[i]->get_username() == username)
 				return false;
 		}
 	return true;

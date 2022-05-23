@@ -17,5 +17,5 @@ void User::join_cmd( std::vector<std::string> cmd )
         server->channels[i]->add_user(_fd);
     }
     adam_sender(_fd, RPL_TOPIC(_nickname, cmd[0], "topic"));
-    server->channels[i]->send_all(*this, RPL_JOIN(_nickname, cmd[0]), true);
+    server->channels[i]->send_all(this, RPL_JOIN(_nickname, cmd[0]), true);
 }

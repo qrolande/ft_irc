@@ -14,7 +14,7 @@ private:
 public:
 	static std::string			password;
 	std::vector<int>			client_socket;
-	std::vector<User>			clients;
+	std::vector<User *>			clients;
 	std::vector<Channel *>		channels;
 
 	Server(int port);
