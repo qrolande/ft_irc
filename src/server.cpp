@@ -62,11 +62,12 @@ void Server::main_loop(sockaddr_in address)
 			if(sd > _max_fd)  
 				_max_fd = sd;  
 		}
-	   
-		if (select(_max_fd + 1 , &readfds , NULL , NULL , NULL) < 0)
-		{  
+		
+		sd = select(_max_fd + 1 , &readfds , NULL , NULL , NULL);
+		if (sd < 0)
 			printf("select error\n"); //ERROR
-		}
+		else if (sd == 0)
+			continue;
 			 
 		if (FD_ISSET(_listening, &readfds))  
 		{
