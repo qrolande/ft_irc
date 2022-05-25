@@ -48,3 +48,37 @@ void User::username_cmd(std::vector<std::string> cmd)
         is_username_passed = true;
     }
 }
+
+void User::welcome( void )
+{
+    printf("NEW USER! [FD%d] NICKNAME: [%s]\n", _fd, _nickname.c_str());
+    adam_sender(_fd, RPL_MOTDSTART(_nickname));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠏⢀⣀⣤⣤⣤⣤⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⣿⣿⣿⣿⡿⣿⣴⢶⣶⣿⣟⣶⣿⣭⠿⠦⠤⠽⣷⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⣿⣿⡿⢫⣿⢋⣠⣿⣿⡶⢻⡏⠀⠀⠀⠀⠀⠀⠀⠉⠙⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⡿⠋⠈⣸⣿⣿⣿⡿⠿⠀⠈⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⢯⠋⠈⠀⣴⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠒⠀⠀⢰⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⢼⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⢀⡀⠤⠤⠤⣀⠀⢀⡀⠤⠤⠤⣀⣱⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⢸⣿⣿⣿⣿⣿⠀⠀⠀⢀⡖⠁⠀⠀⠀⠀⠀⠱⡏⠀⠀⠀⠀⠈⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠈⣿⣿⣿⣿⣿⡆⠀⠀⢸⠀⠀⠴⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠶⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⢀⡴⠋⠉⢹⡶⠶⢤"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣸⢻⡜⡄⠀⠀⠀⠀⠀⠀⢀⠶⠒⠒⠀⠐⣄⡼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⠟⠛⠓⠶⣏⠀⠀⣀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⢸⢧⣿⣿⣿⣿⣿⡿⠀⠷⠙⠲⠄⠀⡀⠠⠔⠁⠀⠀⠀⢀⣠⡇⡧⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⡇⠀⡀⠀⠀⠈⢦⠞⠁"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⢸⡈⢻⣿⣿⣿⡿⠧⣄⠀⠀⠀⢀⡴⠖⠒⠚⠛⠛⠛⠛⠉⠀⠈⠙⠦⣀⣠⣀⠀⠀⠀⠀⢰⣿⣿⣿⣿⠄⠀⠈⢢⡀⠠⢾⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⣴⣾⣿⣿⣿⢲⡶⡄⠀⢀⡶⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢁⠀⢸⠀⠀⠀⠀⣸⣿⣿⠟⠋⠀⠀⠀⡎⠀⠀⠈⠉⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⡀⠀⠀⠘⣿⣿⣿⣿⣿⣦⣤⡴⠀⣾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡷⢰⠃⠀⠀⣠⣾⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠙⢦⡀⠀⠈⠛⢻⣿⣿⣿⣿⡇⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢦⣀⣠⠎⢀⣤⣾⡿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠞⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠈⠳⢄⠀⢸⣿⣿⣿⣿⡇⠀⠙⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⠃⠀⣠⣴⣿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡰⠁⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⠈⠙⢾⣿⣿⣿⣿⡇⠀⠀⠈⠳⠤⣀⡀⠀⠀⢀⣀⠤⡖⠋⢀⡤⠾⠿⣏⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠎⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⠀⠀⠀⢨⠇⠙⢿⠷⠖⠒⠛⠓⠒⠚⠛⠯⡉⠉⠀⠀⡷⠶⠯⡁⠀⠀⠀⠙⠢⡀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠜⠁⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⠀⠀⢀⡌⠀⠀⠀⠳⡀⠀⠀⠀⠀⠀⡌⠀⠙⢆⠀⠀⡧⠂⠀⢡⠀⠀⠀⠀⠀⠈⠢⡀⠀⠀⠀⠀⢀⡔⠁⠀⠀⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⠀⢀⠌⠀⠀⠀⠀⠀⠰⡀⠀⠀⠀⢰⠃⠀⠀⠈⠣⡴⠉⠡⡀⠈⡆⠀⠀⠀⠀⠀⠀⠘⠄⠀⢀⡴⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⡠⠊⠀⠀⠀⠀⠀⠀⠀⢩⠉⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠱⡀⠁⠀⠀⠀⠀⠀⠀⠀⠈⣶⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⣷⣄⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢡⠀⠀⠀⠀⠀⠀⠀⠀⢠⠎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣎⡁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡆⠀⠀⠀⠀⢀⡠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⣿⣶⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⢤⡤⠴⠒⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_MOTD(_nickname, "⠻⠿⢿⣿⣿⣿⣿⠏⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
+    adam_sender(_fd, RPL_ENDOFMOTD(_nickname));
+    adam_sender(_fd, RPL_WELCOME(_username));
+    welcomed = true;
+}

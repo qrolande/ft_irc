@@ -20,7 +20,7 @@ void split(std::vector<std::string>& dest, int max_args)
         for (j = i; tmp[j] && tmp[j] != ' '; j++);
         if (max_args == 1 || tmp[i] == ':')
         {
-            dest.push_back(tmp.substr(i));
+            dest.push_back(tmp.substr(tmp[i] == ':' ? i + 1 : i));
             return;
         }
         else
@@ -43,6 +43,7 @@ void adam_sender(int fd, std::string message)
 {
     send(fd, message.c_str(), strlen(message.c_str()), 0);
     send(fd, "\r\n", 2, 0);
+    std::cout << message << std::endl;
 }
 
 bool    is_nickname_valid( const std::string& nick )

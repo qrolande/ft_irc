@@ -1,7 +1,20 @@
 #include "../incl/global.hpp"
 
 User::User(int fd, Server *_server) : _fd(fd), server(_server) {
-    _nickname = "user " + std::to_string(fd);
+    _nickname = "user" + std::to_string(fd);
+    is_password_passed = false;
+    is_nickname_passed = false;
+    is_username_passed = false;
+    welcomed = false;
+    memset(this->buffer, '\0', BUFFER_SIZE);
+    functions["PASS"] = &User::password_cmd;
+    functions["USER"] = &User::username_cmd;
+    functions["NICK"] = &User::nickname_cmd;
+    functions["PRIVMSG"] = &User::privmsg_cmd;
+    functions["QUIT"] = &User::quit_cmd;
+    functions["AWAY"] = &User::away_cmd;
+    functions["JOIN"] = &User::join_cmd;
+    functions["PING"] = &User::ping_cmd;
 }
 
 User & User::operator=(const User & src)
@@ -63,7 +76,6 @@ void User::buffer_copy( char command[] )
 void User::parse_command( char command[] )
 {
     buffer_copy(command);
-    // std::cout << command << std::endl;
     for (int j = 0; buffer[j];)
     {
         int i = contains_new_line(this->buffer + j);
@@ -72,83 +84,22 @@ void User::parse_command( char command[] )
         this->buffer[i + j] = '\0';
         std::vector<std::string> parsed;
         split(parsed, this->buffer + j);
-        if (parsed.size() > 0)
+        if (parsed.size() > 0 && parsed[0].size() > 0)
             work_with_command(parsed);
         for (j = i + j + 1; buffer[j] == '\r' || buffer[j] == '\n'; j++);
         parsed.clear();
     }
-    memset(this->buffer, 0, BUFFER_SIZE);
+    memset(this->buffer, '\0', BUFFER_SIZE);
 }
 
 void User::work_with_command( std::vector<std::string> parsed )
 {
-    if (!is_authorized())
+    if (functions.find(parsed[0]) != functions.end())
     {
-        authorize(parsed);
-        if (is_authorized())
-        {
-            printf("NEW USER! [FD%d] NICKNAME: [%s]\n", _fd, _nickname.c_str());
-            adam_sender(_fd, RPL_MOTDSTART(_nickname));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠏⢀⣀⣤⣤⣤⣤⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⣿⣿⣿⣿⡿⣿⣴⢶⣶⣿⣟⣶⣿⣭⠿⠦⠤⠽⣷⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⣿⣿⡿⢫⣿⢋⣠⣿⣿⡶⢻⡏⠀⠀⠀⠀⠀⠀⠀⠉⠙⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⡿⠋⠈⣸⣿⣿⣿⡿⠿⠀⠈⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⢯⠋⠈⠀⣴⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠒⠀⠀⢰⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⢼⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⢀⡀⠤⠤⠤⣀⠀⢀⡀⠤⠤⠤⣀⣱⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⢸⣿⣿⣿⣿⣿⠀⠀⠀⢀⡖⠁⠀⠀⠀⠀⠀⠱⡏⠀⠀⠀⠀⠈⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠈⣿⣿⣿⣿⣿⡆⠀⠀⢸⠀⠀⠴⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠶⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⢀⡴⠋⠉⢹⡶⠶⢤"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣸⢻⡜⡄⠀⠀⠀⠀⠀⠀⢀⠶⠒⠒⠀⠐⣄⡼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⠟⠛⠓⠶⣏⠀⠀⣀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⢸⢧⣿⣿⣿⣿⣿⡿⠀⠷⠙⠲⠄⠀⡀⠠⠔⠁⠀⠀⠀⢀⣠⡇⡧⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⡇⠀⡀⠀⠀⠈⢦⠞⠁"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⢸⡈⢻⣿⣿⣿⡿⠧⣄⠀⠀⠀⢀⡴⠖⠒⠚⠛⠛⠛⠛⠉⠀⠈⠙⠦⣀⣠⣀⠀⠀⠀⠀⢰⣿⣿⣿⣿⠄⠀⠈⢢⡀⠠⢾⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⣴⣾⣿⣿⣿⢲⡶⡄⠀⢀⡶⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢁⠀⢸⠀⠀⠀⠀⣸⣿⣿⠟⠋⠀⠀⠀⡎⠀⠀⠈⠉⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⡀⠀⠀⠘⣿⣿⣿⣿⣿⣦⣤⡴⠀⣾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡷⢰⠃⠀⠀⣠⣾⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠙⢦⡀⠀⠈⠛⢻⣿⣿⣿⣿⡇⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢦⣀⣠⠎⢀⣤⣾⡿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠞⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠈⠳⢄⠀⢸⣿⣿⣿⣿⡇⠀⠙⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⠃⠀⣠⣴⣿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡰⠁⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⠈⠙⢾⣿⣿⣿⣿⡇⠀⠀⠈⠳⠤⣀⡀⠀⠀⢀⣀⠤⡖⠋⢀⡤⠾⠿⣏⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠎⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⠀⠀⠀⢨⠇⠙⢿⠷⠖⠒⠛⠓⠒⠚⠛⠯⡉⠉⠀⠀⡷⠶⠯⡁⠀⠀⠀⠙⠢⡀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠜⠁⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⠀⠀⢀⡌⠀⠀⠀⠳⡀⠀⠀⠀⠀⠀⡌⠀⠙⢆⠀⠀⡧⠂⠀⢡⠀⠀⠀⠀⠀⠈⠢⡀⠀⠀⠀⠀⢀⡔⠁⠀⠀⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⠀⢀⠌⠀⠀⠀⠀⠀⠰⡀⠀⠀⠀⢰⠃⠀⠀⠈⠣⡴⠉⠡⡀⠈⡆⠀⠀⠀⠀⠀⠀⠘⠄⠀⢀⡴⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠀⠀⠀⠀⡠⠊⠀⠀⠀⠀⠀⠀⠀⢩⠉⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠱⡀⠁⠀⠀⠀⠀⠀⠀⠀⠈⣶⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⣷⣄⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢡⠀⠀⠀⠀⠀⠀⠀⠀⢠⠎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣎⡁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡆⠀⠀⠀⠀⢀⡠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⣿⣿⣿⣶⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⢤⡤⠴⠒⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_MOTD(_nickname, "⠻⠿⢿⣿⣿⣿⣿⠏⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"));
-            adam_sender(_fd, RPL_ENDOFMOTD(_nickname));
-            adam_sender(_fd, RPL_WELCOME(_username));
-        }
+        (this->*functions[parsed[0]])(parsed);
+        if (!welcomed && is_authorized())
+            welcome();
     }
-    else
-    {
-        if (parsed[0] == "QUIT")
-            quit_cmd(parsed);
-        else if (parsed[0] == "PRIVMSG")
-            privmsg_cmd(parsed);
-        else if (parsed[0] == "NICK")
-            nickname_cmd(parsed);
-        else if (parsed[0] == "PING")
-            ping_cmd(parsed);
-        else if (parsed[0] == "AWAY")
-            away_cmd(parsed);
-        else if (parsed[0] == "JOIN")
-            join_cmd(parsed);
-
-
-
-        else
-            adam_sender(_fd, ERR_UNKNOWNCOMMAND(_nickname, parsed[0]));
-    }
-}
-
-//добавить ошибки
-void User::authorize( std::vector<std::string> parsed )
-{
-    if (parsed[0] == "PASS")
-        password_cmd(parsed);
-    else if (parsed[0] == "NICK")
-        nickname_cmd(parsed);
-    else if (parsed[0] == "USER")
-        username_cmd(parsed);
     else
         adam_sender(_fd, ERR_UNKNOWNCOMMAND(_nickname, parsed[0]));
 }
