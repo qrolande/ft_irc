@@ -1,7 +1,11 @@
 #include "../incl/global.hpp"
 
 User::User(int fd, Server *_server) : _fd(fd), server(_server) {
-    _nickname = "user " + std::to_string(fd);
+    _nickname = "user" + std::to_string(fd);
+    is_password_passed = false;
+    is_nickname_passed = false;
+    is_username_passed = false;
+    memset(this->buffer, '\0', BUFFER_SIZE);
 }
 
 User & User::operator=(const User & src)
@@ -63,7 +67,6 @@ void User::buffer_copy( char command[] )
 void User::parse_command( char command[] )
 {
     buffer_copy(command);
-    // std::cout << command << std::endl;
     for (int j = 0; buffer[j];)
     {
         int i = contains_new_line(this->buffer + j);
@@ -77,7 +80,7 @@ void User::parse_command( char command[] )
         for (j = i + j + 1; buffer[j] == '\r' || buffer[j] == '\n'; j++);
         parsed.clear();
     }
-    memset(this->buffer, 0, BUFFER_SIZE);
+    memset(this->buffer, '\0', BUFFER_SIZE);
 }
 
 void User::work_with_command( std::vector<std::string> parsed )

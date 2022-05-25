@@ -4,7 +4,6 @@ void User::join_cmd( std::vector<std::string> cmd )
 {
     split(cmd, 2);
     int i = server->is_channel_available(cmd[0]);
-    std::cout << "available ? :" << i << std::endl;
     if (i == -1)
     {
         Channel *channel = new Channel(cmd[0], server);

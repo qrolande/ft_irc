@@ -37,6 +37,7 @@ void Server::start()
 		perror("listen");   //ERROR
 		exit(EXIT_FAILURE);  
 	}
+	fcntl(_listening, F_SETFL, O_NONBLOCK);
 	main_loop(address);
 }
 
@@ -76,6 +77,8 @@ void Server::main_loop(sockaddr_in address)
 				exit(EXIT_FAILURE);
 			}
 
+			fcntl(new_socket, F_SETFL, O_NONBLOCK);
+
 			printf("NEW CONNECTION [FD%d]\n", new_socket);  
 				 
 			bool t = false;
@@ -84,22 +87,11 @@ void Server::main_loop(sockaddr_in address)
 			{  
 				if( client_socket[i] == 0 )  
 				{
-					// std::vector<User>::iterator it = clients.begin();
-					// std::cout << "here" << std::endl;
 					client_socket[i] = new_socket;
 					delete clients[i];
 					clients[i] = nullptr;
 					clients[i] = user;
 					t = true;
-					// std::cout << user->get_nickname() << std::endl;
-					// std::cout << clients[i].get_nickname() << std::endl;
-					// // *(it + i) = *user;s
-					// // clients[i] = *user;
-					// std::cout << clients.size() << std::endl;
-					// clients.erase(clients.begin() + i);
-					// std::cout << clients.size() << std::endl;
-					// clients.insert(clients.begin() + i, *user);
-					// std::cout << clients[i].get_nickname() << std::endl;
 					break;  
 				}
 			}
@@ -108,7 +100,6 @@ void Server::main_loop(sockaddr_in address)
 				client_socket.push_back(new_socket);
 				clients.push_back(user);
 			}
-			// delete user;
 			_count_connects++;
 		}
 

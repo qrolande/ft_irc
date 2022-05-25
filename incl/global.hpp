@@ -14,6 +14,9 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <fcntl.h>
+#include <unistd.h>
+
 
 #define BUFFER_SIZE 1024
 
