@@ -84,7 +84,7 @@ void User::parse_command( char command[] )
         this->buffer[i + j] = '\0';
         std::vector<std::string> parsed;
         split(parsed, this->buffer + j);
-        if (parsed.size() > 0)
+        if (parsed.size() > 0 && parsed[0].size() > 0)
             work_with_command(parsed);
         for (j = i + j + 1; buffer[j] == '\r' || buffer[j] == '\n'; j++);
         parsed.clear();
