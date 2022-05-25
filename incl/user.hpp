@@ -19,6 +19,7 @@ private:
     bool is_nickname_passed;
     bool is_username_passed;
     bool is_away;
+    bool welcomed;
 
     void work_with_command(std::vector<std::string> parsed);
 
@@ -33,11 +34,15 @@ private:
 
     void join_cmd( std::vector<std::string> cmd );
 
+    void welcome();
 
 
     void buffer_copy( char command[] );
 
     Server *server;
+
+    typedef void (User::*commandPtr)(std::vector<std::string>);
+    std::map<std::string, commandPtr> functions;
 
 public:
     char buffer[BUFFER_SIZE];
