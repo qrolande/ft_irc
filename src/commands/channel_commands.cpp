@@ -27,19 +27,16 @@ void User::join_cmd( std::vector<std::string> cmd )
             {
                 Channel *channel = new Channel(cmd[0], server);
                 server->channels.push_back(channel);
-                channel->add_user(_fd);
                 i = 0;
+                std::cout << "Channel: " << server->channels[i]->get_channel_name() << " created" << std::endl;
             }
-            if (server->channels[i]->user_in_channel(_fd)){
-                adam_sender(_fd, ERR_USERONCHANNEL(_nickname, _username, server->channels[i]->get_channel_name()));
-            }
-            else
-            {
+            if (!server->channels[i]->user_in_channel(_fd)){
                 server->channels[i]->add_user(_fd);
+                adam_sender(_fd, RPL_TOPIC(_nickname, cmd[0], "topic"));
+                server->channels[i]->send_all(this, RPL_JOIN(_nickname, cmd[0]), true);
             }
-            adam_sender(_fd, RPL_TOPIC(_nickname, cmd[0], "topic"));
-            server->channels[i]->send_all(this, RPL_JOIN(_nickname, cmd[0]), true);
-            std::cout << server->channels[i]->get_users_count() << std::endl;
+            else 
+                adam_sender(_fd, ERR_USERONCHANNEL(_nickname, _username, server->channels[i]->get_channel_name()));
         }
     }
 }
