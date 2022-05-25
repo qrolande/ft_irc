@@ -14,6 +14,7 @@ public:
     Channel(std::string channel_name, Server *server);
     int get_users_count( void );
     void add_user(int fd);
+    bool user_in_channel(int fd);
 
     std::string get_channel_name( void );
     

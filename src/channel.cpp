@@ -12,6 +12,12 @@ void Channel::add_user( int fd )
     channel_users.push_back(fd);
 }
 
+int Channel::get_users_count(void) 
+{
+    users_count = channel_users.size();
+    return (users_count);
+}
+
 void Channel::send_all( User *user, std::string message, bool flag )
 {
     std::list<int>::iterator it;
@@ -25,4 +31,15 @@ void Channel::send_all( User *user, std::string message, bool flag )
                 adam_sender(*it, message);
         }
     }
+}
+
+bool Channel::user_in_channel(int fd) {
+    std::list<int>::iterator start = channel_users.begin();
+    while (start != channel_users.end())
+    {
+        if ((*start) == fd)
+            return true;
+        start++;
+    }
+    return false;
 }
