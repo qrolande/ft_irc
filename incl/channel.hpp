@@ -3,6 +3,14 @@
 
 #include "global.hpp"
 
+enum channel_mode {
+    none = 0,               // 0000000000
+    oper = 1 << 0,          // 0000000001
+    invite_only = 1 << 1,   // 0000000010
+    limited = 1 << 2,       // 0000000100
+    operatorTopic = 1 << 3  // 0000001000
+};
+
 class Channel
 {
 private:

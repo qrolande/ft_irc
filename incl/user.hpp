@@ -6,6 +6,14 @@
 class Server;
 class Channel;
 
+enum user_mode {
+    UserNone = 0,			// 0000000000
+    invisibility = 1 << 0,  // 0000000001
+    silence = 1 << 1,       // 0000000010
+    UserOper = 1 << 2,		// 0000000100
+    wallopsOff = 1 << 3,    // 0000001000
+};
+
 class User
 {
 private:
