@@ -110,12 +110,10 @@ void Server::main_loop(sockaddr_in address)
 			memset(buffer, '\0', BUFFER_SIZE);
 			if (FD_ISSET( user->get_fd() , &readfds))  
 			{
-				if ((valread = recv( user->get_fd() , buffer, BUFFER_SIZE, 0 )) <= 0)  
+				if ((valread = recv( user->get_fd() , buffer, BUFFER_SIZE, 0 )) <= 0)
 				{
-					printf("[FD%d] DISCONNECTED\n", user->get_fd());
-					close(user->get_fd());
-					client_socket[i] = 0;
-					_count_connects--;
+					std::vector<std::string> vec;
+					user->quit_cmd(vec);
 				}
 				else
 				{
@@ -164,4 +162,24 @@ bool Server::is_username_available( std::string username )
 int Server::get_count_connects( void )
 {
 	return _count_connects;
+}
+
+void Server::remove_one_connect( void )
+{
+	--_count_connects;
+}
+
+void Server::remove_channel( std::string channel_name )
+{
+	std::vector<Channel *>::iterator start = channels.begin();
+    while (start != channels.end())
+    {
+        if ((*start)->get_channel_name() == channel_name)
+        {
+			Channel *tmp = *start;
+			channels.erase(start);
+            delete tmp;
+			break;
+        }
+    }
 }

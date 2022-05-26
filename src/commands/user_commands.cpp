@@ -2,13 +2,23 @@
 
 void User::quit_cmd(std::vector<std::string> cmd)
 {
-	cmd[0].clear();
-	//доделать логику с сообщением
+	for (unsigned int i = 0; i < server->channels.size(); i++)
+	{
+		unsigned int channels_size = server->channels.size();
+		if (server->channels[i]->user_in_channel(_fd))
+		{
+			server->channels[i]->send_all(this, RPL_QUIT(_nickname, cmd.size() == 2 ? cmd[1] : "Leaving."), true);
+			server->channels[i]->remove_client(_fd);
+		}
+		if (server->channels.size() != channels_size)
+			--i;
+	}
 	printf("[FD%d] DISCONNECTED\n", _fd);
 	for (unsigned int i = 0; i < server->client_socket.size(); i++)
 		if (server->client_socket[i] == _fd)
 			server->client_socket[i] = 0;
 	close(_fd);
+	server->remove_one_connect();
 }
 
 void User::privmsg_cmd(std::vector<std::string> cmd)

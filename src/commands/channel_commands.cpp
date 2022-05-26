@@ -15,7 +15,9 @@ bool    is_valid_chanell(const std::string& channel) {
 
 void User::join_cmd( std::vector<std::string> cmd )
 {
-    if (cmd.size() != 2)
+    if (!is_authorized())
+        adam_sender(_fd, ERR_NOTREGISTERED(_nickname));
+    else if (cmd.size() != 2)
         adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, cmd[0]));
     else {
         split(cmd, 2);
@@ -27,10 +29,11 @@ void User::join_cmd( std::vector<std::string> cmd )
             {
                 Channel *channel = new Channel(cmd[0], server);
                 server->channels.push_back(channel);
-                i = 0;
+                i = server->channels.size() - 1;
                 std::cout << "Channel: " << server->channels[i]->get_channel_name() << " created" << std::endl;
             }
-            if (!server->channels[i]->user_in_channel(_fd)){
+            if (!server->channels[i]->user_in_channel(_fd))
+            {
                 server->channels[i]->add_user(_fd);
                 adam_sender(_fd, RPL_TOPIC(_nickname, cmd[0], "topic"));
                 server->channels[i]->send_all(this, RPL_JOIN(_nickname, cmd[0]), true);

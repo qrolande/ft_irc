@@ -68,7 +68,7 @@ void User::buffer_copy( char command[] )
 {
     int i = 0;
     for (; this->buffer[i] != '\0'; i++);
-    for (int j = 0; command[j] != '\0'; j++, i++)
+    for (int j = 0; command[j] != '\0' && i < BUFFER_SIZE; j++, i++)
         this->buffer[i] = command[j];
     this->buffer[i] = '\0';
 }

@@ -19,6 +19,8 @@ public:
     std::string get_channel_name( void );
     
     void send_all( User *user, std::string message, bool flag );
+
+    void remove_client(int fd);
 };
 
 #endif

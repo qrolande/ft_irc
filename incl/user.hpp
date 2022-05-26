@@ -24,15 +24,6 @@ private:
     void work_with_command(std::vector<std::string> parsed);
 
     //
-    void password_cmd( std::vector<std::string> cmd );
-    void nickname_cmd( std::vector<std::string> cmd );
-    void username_cmd( std::vector<std::string> cmd );
-    void quit_cmd( std::vector<std::string> cmd );
-    void privmsg_cmd( std::vector<std::string> cmd );
-    void ping_cmd( std::vector<std::string> cmd );
-    void away_cmd( std::vector<std::string> cmd );
-
-    void join_cmd( std::vector<std::string> cmd );
 
     void welcome();
 
@@ -64,6 +55,17 @@ public:
 
     void parse_command( char command[] );
     void authorize( std::vector<std::string> parsed );
+
+    
+    void password_cmd( std::vector<std::string> cmd );
+    void nickname_cmd( std::vector<std::string> cmd );
+    void username_cmd( std::vector<std::string> cmd );
+    void quit_cmd( std::vector<std::string> cmd );
+    void privmsg_cmd( std::vector<std::string> cmd );
+    void ping_cmd( std::vector<std::string> cmd );
+    void away_cmd( std::vector<std::string> cmd );
+
+    void join_cmd( std::vector<std::string> cmd );
 };
 
 #endif

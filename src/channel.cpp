@@ -43,3 +43,23 @@ bool Channel::user_in_channel(int fd) {
     }
     return false;
 }
+
+void Channel::remove_client(int fd)
+{
+    std::list<int>::iterator start = channel_users.begin();
+    while (start != channel_users.end())
+    {
+        if ((*start) == fd)
+        {
+            channel_users.erase(start);
+            break;
+        }
+        start++;
+    }
+    printf("[FD%d] removed from %s\n", fd, this->_channel_name.c_str());
+    if (channel_users.size() == 0)
+    {
+        printf("%s is deleted\n", _channel_name.c_str());
+        _server->remove_channel(_channel_name);
+    }
+}

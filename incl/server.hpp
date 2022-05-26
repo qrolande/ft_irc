@@ -27,6 +27,9 @@ public:
 	int is_channel_available( std::string channel_name );
 
 	int get_count_connects();
+
+	void remove_one_connect( void );
+	void remove_channel( std::string _channel_name );
 };
 
 #endif
