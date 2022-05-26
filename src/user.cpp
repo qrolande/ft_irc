@@ -15,6 +15,8 @@ User::User(int fd, Server *_server) : _fd(fd), server(_server) {
     functions["AWAY"] = &User::away_cmd;
     functions["JOIN"] = &User::join_cmd;
     functions["PING"] = &User::ping_cmd;
+    functions["WHO"] = &User::who_cmd;
+    functions["PART"] = &User::part_cmd;
 }
 
 User & User::operator=(const User & src)
@@ -107,4 +109,16 @@ void User::work_with_command( std::vector<std::string> parsed )
 int User::get_fd( void )
 {
     return this->_fd;
+}
+
+std::string User::get_fullname() {
+    return (_nickname + '!' + _username + '@' + "localhost");
+}
+
+int User::is_on_channel( std::string channel_name )
+{
+    for (unsigned int i = 0; i < channels.size(); i++)
+        if (channels[i]->get_channel_name() == channel_name)
+            return i;
+    return -1;
 }

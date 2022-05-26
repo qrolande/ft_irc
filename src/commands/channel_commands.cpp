@@ -33,13 +33,42 @@ void User::join_cmd( std::vector<std::string> cmd )
                 std::cout << "Channel: " << server->channels[i]->get_channel_name() << " created" << std::endl;
             }
             if (!server->channels[i]->user_in_channel(_fd))
-            {
-                server->channels[i]->add_user(_fd);
-                adam_sender(_fd, RPL_TOPIC(_nickname, cmd[0], "topic"));
-                server->channels[i]->send_all(this, RPL_JOIN(_nickname, cmd[0]), true);
-            }
+                joining(server->channels[i]);
             else 
                 adam_sender(_fd, ERR_USERONCHANNEL(_nickname, _username, server->channels[i]->get_channel_name()));
+        }
+    }
+}
+
+void User::joining(Channel *channel)
+{
+    channel->add_user(this);
+    channel->send_all(RPL_JOIN(get_fullname(), channel->get_channel_name()));
+    adam_sender(_fd, RPL_TOPIC(_nickname, channel->get_channel_name(), channel->get_topic()));
+    for (unsigned int i = 0; i < channel->channel_users.size(); i++)
+        channel->send_all(RPL_NAMREPLY(_nickname, channel->get_channel_name(), server->clients[i]->get_fullname())); //need to rework
+    channel->send_all(RPL_ENDOFNAMES(_nickname, channel->get_channel_name()));
+    channels.push_back(channel);
+}
+
+void User::part_cmd( std::vector<std::string> cmd )
+{
+    int i = 0;
+    if (!is_authorized())
+        adam_sender(_fd, ERR_NOTREGISTERED(_nickname));
+    else if (cmd.size() != 2)
+        adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, cmd[0]));
+    else
+    {
+        if (server->is_channel_available(cmd[1]) == -1)
+            adam_sender(_fd, ERR_NOSUCHCHANNEL(_nickname, cmd[1]));
+        else if ((i = is_on_channel(cmd[1])) == -1)
+            adam_sender(_fd, ERR_NOTONCHANNEL(_nickname, cmd[1]));
+        else
+        {
+            channels[i]->send_all(this, RPL_PART(_nickname, channels[i]->get_channel_name(), "leaving."), true);
+            channels[i]->remove_client(_fd);
+            channels.erase(channels.begin() + i);
         }
     }
 }

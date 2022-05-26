@@ -1,17 +1,14 @@
 #include "../../incl/global.hpp"
 
-void User::quit_cmd(std::vector<std::string> cmd)
+void User::quit_cmd(std::vector<std::string>)
 {
-	for (unsigned int i = 0; i < server->channels.size(); i++)
+	std::vector<std::string> tmp;
+	tmp.push_back("PART");
+	while (channels.size() != 0)
 	{
-		unsigned int channels_size = server->channels.size();
-		if (server->channels[i]->user_in_channel(_fd))
-		{
-			server->channels[i]->send_all(this, RPL_QUIT(_nickname, cmd.size() == 2 ? cmd[1] : "Leaving."), true);
-			server->channels[i]->remove_client(_fd);
-		}
-		if (server->channels.size() != channels_size)
-			--i;
+		tmp.push_back(channels[0]->get_channel_name()); //мб можно проще
+		part_cmd(tmp);
+		tmp.erase(tmp.begin() + 1);
 	}
 	printf("[FD%d] DISCONNECTED\n", _fd);
 	for (unsigned int i = 0; i < server->client_socket.size(); i++)

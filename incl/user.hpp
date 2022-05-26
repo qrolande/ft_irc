@@ -4,6 +4,7 @@
 #include "global.hpp"
 
 class Server;
+class Channel;
 
 class User
 {
@@ -27,6 +28,7 @@ private:
 
     void welcome();
 
+    std::vector<Channel *> channels;
 
     void buffer_copy( char command[] );
 
@@ -41,7 +43,6 @@ public:
     User(int fd, Server *_server);
     User & operator=(const User &);
 
-
     bool is_authorized( void );
     void set_nickname( std::string nickname );
     void set_username( std::string username );
@@ -51,7 +52,10 @@ public:
 
     std::string get_nickname( void );
     std::string get_username( void );
+    std::string get_fullname( void );
     int get_fd( void );
+
+    int is_on_channel( std::string channel_name );
 
     void parse_command( char command[] );
     void authorize( std::vector<std::string> parsed );
@@ -60,12 +64,15 @@ public:
     void password_cmd( std::vector<std::string> cmd );
     void nickname_cmd( std::vector<std::string> cmd );
     void username_cmd( std::vector<std::string> cmd );
-    void quit_cmd( std::vector<std::string> cmd );
+    void quit_cmd( std::vector<std::string> );
     void privmsg_cmd( std::vector<std::string> cmd );
     void ping_cmd( std::vector<std::string> cmd );
     void away_cmd( std::vector<std::string> cmd );
+    void who_cmd( std::vector<std::string> ) {}
+    void part_cmd( std::vector<std::string> cmd );
 
     void join_cmd( std::vector<std::string> cmd );
+    void joining(Channel *channel);
 };
 
 #endif
