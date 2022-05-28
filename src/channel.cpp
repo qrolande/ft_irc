@@ -69,11 +69,12 @@ void Channel::remove_client(int fd)
     {
         if ((*start)->get_fd() == fd)
         {
-            operators.erase(start);    //добавить передачу оператора
+            operators.erase(start);
             break;
         }
         start++;
     }
+    give_operator();
     printf("[FD%d] removed from %s\n", fd, this->_channel_name.c_str());
     if (channel_users.size() == 0)
     {
@@ -125,4 +126,23 @@ void Channel::add_operator(User *user)
         if (operators[i] == user)
             return;
     operators.push_back(user);
+}
+
+bool Channel::is_operator( int fd )
+{
+    std::vector<User *>::iterator start = operators.begin();
+    while (start != operators.end())
+    {
+        if ((*start)->get_fd() == fd)
+            return true;
+        start++;
+    }
+    return false;
+}
+
+void Channel::give_operator( void )
+{
+	if (is_operator(channel_users[0]->get_fd()))
+		return;
+	add_operator(channel_users[0]);
 }

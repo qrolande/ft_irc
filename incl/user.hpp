@@ -82,6 +82,11 @@ public:
     void who_cmd( std::vector<std::string> ) {}
     void part_cmd( std::vector<std::string> cmd );
     void topic_cmd( std::vector<std::string> cmd );
+    void kick_cmd( std::vector<std::string> cmd );
+
+    void mode_cmd( std::vector<std::string> cmd );
+    void mode_channel( std::vector<std::string> cmd );
+    void mode_user( std::vector<std::string> cmd );
 
     void join_cmd( std::vector<std::string> cmd );
     void joining(Channel *channel);

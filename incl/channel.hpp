@@ -41,6 +41,10 @@ public:
 
     void add_operator(User *user);
 
+    bool is_operator( int fd );
+
+    void give_operator( void );
+
 
     void                            set_mode(Mode);
     void                            unset_mode(Mode);

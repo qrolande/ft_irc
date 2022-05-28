@@ -49,6 +49,7 @@ void User::joining(Channel *channel)
         channel->send_all(RPL_NAMREPLY(_nickname, channel->get_channel_name(), server->clients[i]->get_fullname())); //need to rework
     channel->send_all(RPL_ENDOFNAMES(_nickname, channel->get_channel_name()));
     channels.push_back(channel);
+    channel->give_operator();
 }
 
 void User::part_cmd( std::vector<std::string> cmd )
@@ -96,17 +97,37 @@ void User::topic_cmd( std::vector<std::string> cmd )
         }
         else
         {
-            //if (server->channels[i] ) <- проверка на мод
-            //{
-            //  if (server->channels[i].operators) <- проверка на оператора
-            //  {
-            //      adam_sender(_fd, ERR_CHANOPRIVSNEEDED();
-            //      return;
-            //  }
-            //}
+            if (server->channels[i]->has_mode(protectedTopic))
+            {
+                if (!server->channels[i]->is_operator(_fd))
+                {
+                    adam_sender(_fd, ERR_CHANOPRIVSNEEDED(_nickname, cmd[0]));
+                    return;
+                }
+            }
             server->channels[i]->set_topic(cmd[1]);
-            // adam_sender(_fd, RPL_TOPIC(_nickname, cmd[0], server->channels[i]->get_topic()));
             server->channels[i]->send_all(RPL_TOPIC(_nickname, cmd[0], server->channels[i]->get_topic()));
         }
+    }
+}
+
+void User::kick_cmd( std::vector<std::string> cmd )
+{
+    int i;
+    split(cmd, -1);
+    if (cmd.size() != 2 && cmd.size() != 3)
+        adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, cmd[0]));
+    else if ((i = server->is_channel_available(cmd[0])) == -1)
+        adam_sender(_fd, ERR_NOSUCHCHANNEL(_nickname, cmd[0]));
+    else if (!server->channels[i]->user_in_channel(_fd))
+        adam_sender(_fd, ERR_NOTONCHANNEL(_nickname, cmd[0]));
+    else if (!server->channels[i]->is_operator(_fd))
+        adam_sender(_fd, ERR_CHANOPRIVSNEEDED(_nickname, cmd[0]));
+    // else if -- если пользователя не существует вообще или в канале
+    else
+    {
+        User *user = server->clients[server->is_nickname_available(cmd[1])];
+        server->channels[i]->send_all(RPL_KICK(_nickname, cmd[0], cmd[1], cmd.size() == 3 ? cmd[2] : ""));
+        server->channels[i]->remove_client(user->get_fd());
     }
 }

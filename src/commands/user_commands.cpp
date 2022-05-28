@@ -76,3 +76,34 @@ void User::away_cmd( std::vector<std::string> cmd )
 		away_message = cmd[1][0] == ':' ? cmd[1].substr(1) : cmd[1];
 	}
 }
+
+void User::mode_cmd( std::vector<std::string> cmd )
+{
+	if (cmd.size() == 1)
+		adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, cmd[0]));
+	else
+	{
+		split(cmd, -1);
+		if (server->is_channel_available(cmd[0]) != -1)
+			mode_channel(cmd);
+		else if (server->is_nickname_available(cmd[0]) != -1)
+			mode_user(cmd);
+		else
+		{
+			if (cmd[0][0] == '#')
+				adam_sender(_fd, ERR_NOSUCHCHANNEL(_nickname, cmd[0]));
+			else
+				adam_sender(_fd, ERR_NOSUCHNICK(_nickname, cmd[0]));
+		}
+	}
+}
+
+void User::mode_channel( std::vector<std::string> )
+{
+
+}
+
+void User::mode_user( std::vector<std::string> )
+{
+
+}

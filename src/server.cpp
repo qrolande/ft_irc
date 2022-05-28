@@ -128,22 +128,26 @@ void Server::main_loop(sockaddr_in address)
 int Server::is_nickname_available( std::string nickname )
 {
 	for (unsigned int i = 0; i < clients.size(); i++)
+	{
 		if (client_socket[i] != 0)
 		{
 			if (clients[i]->get_nickname() == nickname)
 				return i;
 		}
+	}
 	return -1;
 }
 
 int Server::is_channel_available( std::string channel_name )
 {
 	for (unsigned int i = 0; i < channels.size(); i++)
+	{
 		if (channels[i] != nullptr)
 		{
 			if (channels[i]->get_channel_name() == channel_name)
 				return i;
 		}
+	}
 	return -1;
 }
 
@@ -151,11 +155,13 @@ int Server::is_channel_available( std::string channel_name )
 bool Server::is_username_available( std::string username )
 {
 	for (unsigned int i = 0; i < clients.size(); i++)
+	{
 		if (client_socket[i] != 0)
 		{
 			if (clients[i]->get_username() == username)
 				return false;
 		}
+	}
 	return true;
 }
 
