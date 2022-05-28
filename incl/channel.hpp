@@ -3,6 +3,14 @@
 
 #include "global.hpp"
 
+enum Mode {
+    none = 0,               // 0000000000
+    oper = 1 << 0,          // 0000000001
+    invite_only = 1 << 1,   // 0000000010
+    limited = 1 << 2,       // 0000000100
+    protectedTopic = 1 << 3,         // 0000001000
+};
+
 class Channel
 {
 private:
@@ -10,6 +18,10 @@ private:
     std::string _topic;
     Server *_server;
     int users_count;
+    int                                     _modes;
+    int                                     _limit;
+
+    std::vector<User *> operators;
 public:
     Channel(std::string channel_name, Server *server);
     std::vector<User *> channel_users;
@@ -26,6 +38,14 @@ public:
     void send_all(std::string message);
 
     void remove_client(int fd);
+
+    void add_operator(User *user);
+
+
+    void                            set_mode(Mode);
+    void                            unset_mode(Mode);
+    bool                            has_mode(Mode) const;
+    std::string                     show_mode() const;
 };
 
 #endif

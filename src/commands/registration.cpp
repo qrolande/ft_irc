@@ -81,4 +81,6 @@ void User::welcome( void )
     adam_sender(_fd, RPL_ENDOFMOTD(_nickname));
     adam_sender(_fd, RPL_WELCOME(_username));
     welcomed = true;
+    server->users.push_back(this);
+    server->give_operator();
 }

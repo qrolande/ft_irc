@@ -16,6 +16,15 @@ void User::quit_cmd(std::vector<std::string>)
 			server->client_socket[i] = 0;
 	close(_fd);
 	server->remove_one_connect();
+	for (unsigned int i = 0; i < server->users.size(); i++)
+	{
+		if (server->users[i] == this)
+		{
+			server->users.erase(server->users.begin() + i);
+			break;
+		}
+	}
+	server->give_operator();
 }
 
 void User::privmsg_cmd(std::vector<std::string> cmd)

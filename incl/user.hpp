@@ -6,10 +6,21 @@
 class Server;
 class Channel;
 
+enum UserMode {
+    UserNone = 0,					// 0000000000
+    invisibility = 1 << 0,          // 0000000001
+    silence = 1 << 1,          		// 0000000010
+    UserOper = 1 << 2,				// 0000000100
+    wallopsOff = 1 << 3,       		// 0000001000
+};
+
 class User
 {
 private:
     int _fd;
+
+    int             _modes;
+
     std::string _nickname;
     std::string _username;
     std::string _realname;
@@ -74,6 +85,12 @@ public:
 
     void join_cmd( std::vector<std::string> cmd );
     void joining(Channel *channel);
+
+
+    void                            set_mode(UserMode);
+    void                            unset_mode(UserMode);
+    bool                            has_mode(UserMode) const;
+    std::string                     show_mode() const;
 };
 
 #endif

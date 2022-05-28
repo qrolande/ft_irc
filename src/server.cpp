@@ -183,3 +183,11 @@ void Server::remove_channel( std::string channel_name )
         }
     }
 }
+
+void Server::give_operator( void )
+{
+	if (users.size() == 0 || users[0]->has_mode(UserOper))
+		return;
+	users[0]->set_mode(UserOper);
+	adam_sender(users[0]->get_fd(), RPL_YOUREOPER(users[0]->get_nickname()));
+}

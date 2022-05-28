@@ -105,7 +105,8 @@ void User::topic_cmd( std::vector<std::string> cmd )
             //  }
             //}
             server->channels[i]->set_topic(cmd[1]);
-            adam_sender(_fd, RPL_TOPIC(_nickname, cmd[0], server->channels[i]->get_topic()));
+            // adam_sender(_fd, RPL_TOPIC(_nickname, cmd[0], server->channels[i]->get_topic()));
+            server->channels[i]->send_all(RPL_TOPIC(_nickname, cmd[0], server->channels[i]->get_topic()));
         }
     }
 }

@@ -123,3 +123,29 @@ int User::is_on_channel( std::string channel_name )
             return i;
     return -1;
 }
+
+void User::set_mode(UserMode flag) {
+    _modes |= flag;
+}
+
+void User::unset_mode(UserMode flag) {
+    _modes &= (~flag);
+}
+
+bool User::has_mode(UserMode flag) const {
+    return ((_modes & flag) == flag);
+}
+
+// {[+|-]i|s|o|w}
+std::string User::show_mode() const {
+    std::string show;
+    if (has_mode(UserOper))
+        show += 'o';
+    if (has_mode(wallopsOff))
+        show += 'w';
+    if (has_mode(silence))
+        show += 's';
+    if (has_mode(invisibility))
+        show += 'i';
+    return show.empty() ? "" : '+' + show;
+}

@@ -54,12 +54,22 @@ bool Channel::user_in_channel(int fd) {
 void Channel::remove_client(int fd)
 {
     std::vector<User *>::iterator start = channel_users.begin();
-    std::vector<Channel *>::iterator start_c;
+    // std::vector<Channel *>::iterator start_c;
     while (start != channel_users.end())
     {
         if ((*start)->get_fd() == fd)
         {
             channel_users.erase(start);
+            break;
+        }
+        start++;
+    }
+    start = operators.begin();
+    while (start != operators.end())
+    {
+        if ((*start)->get_fd() == fd)
+        {
+            operators.erase(start);    //добавить передачу оператора
             break;
         }
         start++;
@@ -80,4 +90,39 @@ std::string Channel::get_topic( void )
 void Channel::set_topic( std::string topic )
 {
     _topic = topic;
+}
+
+void Channel::set_mode(Mode flag) {
+    _modes |= flag;
+}
+
+void Channel::unset_mode(Mode flag) {
+    _modes &= (~flag);
+}
+
+bool Channel::has_mode(Mode flag) const {
+    return ((_modes & flag) == flag);
+}
+
+// {[+|-]|o|p|s|i|t|n|b|v}
+std::string Channel::show_mode() const {
+    std::string show;
+    if (has_mode(oper))
+        show += 'o';
+    if (has_mode(invite_only))
+        show += 'i';
+    if (has_mode(protectedTopic))
+        show += 't';
+    if (has_mode(limited))
+        show += "l " + std::to_string(_limit);
+
+    return show.empty() ? "" : '+' + show;
+}
+
+void Channel::add_operator(User *user)
+{
+    for (unsigned int i = 0; i < operators.size(); i++)
+        if (operators[i] == user)
+            return;
+    operators.push_back(user);
 }

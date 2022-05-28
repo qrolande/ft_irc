@@ -11,11 +11,13 @@ private:
 	int							_count_connects;
 	int							_max_fd;
 	std::string					_password;
+
 public:
 	static std::string			password;
 	std::vector<int>			client_socket;
 	std::vector<User *>			clients;
 	std::vector<Channel *>		channels;
+	std::vector<User *>			users;
 
 	Server(int port);
 	void start();
@@ -30,6 +32,8 @@ public:
 
 	void remove_one_connect( void );
 	void remove_channel( std::string _channel_name );
+
+	void give_operator();
 };
 
 #endif
