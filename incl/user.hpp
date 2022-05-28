@@ -70,6 +70,7 @@ public:
     void away_cmd( std::vector<std::string> cmd );
     void who_cmd( std::vector<std::string> ) {}
     void part_cmd( std::vector<std::string> cmd );
+    void topic_cmd( std::vector<std::string> cmd );
 
     void join_cmd( std::vector<std::string> cmd );
     void joining(Channel *channel);

@@ -76,3 +76,8 @@ std::string Channel::get_topic( void )
 {
     return this->_topic;
 }
+
+void Channel::set_topic( std::string topic )
+{
+    _topic = topic;
+}

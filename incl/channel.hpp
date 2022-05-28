@@ -19,6 +19,7 @@ public:
 
     std::string get_channel_name( void );
     std::string get_topic( void );
+    void set_topic( std::string topic );
 
 
     void send_all( User *user, std::string message, bool flag );

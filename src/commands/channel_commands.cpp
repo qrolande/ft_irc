@@ -72,3 +72,40 @@ void User::part_cmd( std::vector<std::string> cmd )
         }
     }
 }
+
+void User::topic_cmd( std::vector<std::string> cmd )
+{
+    int i;
+    if (!is_authorized())
+        adam_sender(_fd, ERR_NOTREGISTERED(_nickname));
+    else if (cmd.size() == 1)
+        adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, cmd[0]));
+    else
+    {
+        split(cmd, 2);
+        if ((i = server->is_channel_available(cmd[0])) == -1)
+            adam_sender(_fd, ERR_NOSUCHCHANNEL(_nickname, cmd[0]));
+        else if (!server->channels[i]->user_in_channel(_fd))
+            adam_sender(_fd, ERR_NOTONCHANNEL(_nickname, cmd[0]));
+        else if (cmd.size() == 1)
+        {
+            if (server->channels[i]->get_topic().length() == 0)
+                adam_sender(_fd, RPL_NOTOPIC(_nickname, cmd[0]));
+            else
+                adam_sender(_fd, RPL_TOPIC(_nickname, cmd[0], server->channels[i]->get_topic()));
+        }
+        else
+        {
+            //if (server->channels[i] ) <- проверка на мод
+            //{
+            //  if (server->channels[i].operators) <- проверка на оператора
+            //  {
+            //      adam_sender(_fd, ERR_CHANOPRIVSNEEDED();
+            //      return;
+            //  }
+            //}
+            server->channels[i]->set_topic(cmd[1]);
+            adam_sender(_fd, RPL_TOPIC(_nickname, cmd[0], server->channels[i]->get_topic()));
+        }
+    }
+}

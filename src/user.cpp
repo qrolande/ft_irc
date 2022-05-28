@@ -17,6 +17,7 @@ User::User(int fd, Server *_server) : _fd(fd), server(_server) {
     functions["PING"] = &User::ping_cmd;
     functions["WHO"] = &User::who_cmd;
     functions["PART"] = &User::part_cmd;
+    functions["TOPIC"] = &User::topic_cmd;
 }
 
 User & User::operator=(const User & src)
