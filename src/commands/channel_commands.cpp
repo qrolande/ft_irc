@@ -131,3 +131,27 @@ void User::kick_cmd( std::vector<std::string> cmd )
         server->channels[i]->remove_client(user->get_fd());
     }
 }
+
+void User::invite_cmd( std::vector<std::string> cmd )
+{
+    int i, u;
+    split(cmd, -1);
+    if (cmd.size() != 2)
+        adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, "INVITE"));
+    else if ((u = server->is_nickname_available(cmd[0])) == -1)
+        adam_sender(_fd, ERR_NOSUCHNICK(_nickname, cmd[0]));
+    else if ((i = server->is_channel_available(cmd[1])) == -1)
+        adam_sender(_fd, ERR_NOSUCHCHANNEL(_nickname, cmd[1]));
+    else if (server->channels[i]->user_in_channel(server->clients[u]->get_fd()))
+        adam_sender(_fd, ERR_USERONCHANNEL(_nickname, cmd[0], cmd[1]));
+    else if (server->channels[i]->has_mode(invite_only)
+        && !server->channels[i]->is_operator(_fd))
+        adam_sender(_fd, ERR_CHANOPRIVSNEEDED(_nickname, cmd[1]));
+    else
+    {
+        server->channels[i]->add_user(server->clients[u]);
+        server->channels[i]->send_all(RPL_INVITING(_nickname, cmd[0], cmd[1]));
+        server->channels[i]->send_all(RPL_INVITE(_nickname, cmd[0], cmd[1]));
+    }
+}
+
