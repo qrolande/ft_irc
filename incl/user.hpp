@@ -87,15 +87,15 @@ public:
 
 
     void mode_cmd( std::vector<std::string> cmd );
-    void mode_channel( std::vector<std::string> cmd );
-    void mode_user( std::vector<std::string> cmd );
+    void mode_channel( std::vector<std::string> cmd, int i );
+    void mode_user( std::vector<std::string> cmd, int i );
 
     void join_cmd( std::vector<std::string> cmd );
     void joining(Channel *channel);
 
 
-    void                            set_mode(UserMode);
-    void                            unset_mode(UserMode);
+    void                            set_mode(UserMode, std::string nick, std::string change);
+    void                            unset_mode(UserMode, std::string nick, std::string change);
     bool                            has_mode(UserMode) const;
     std::string                     show_mode() const;
 };

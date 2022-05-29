@@ -93,12 +93,14 @@ void Channel::set_topic( std::string topic )
     _topic = topic;
 }
 
-void Channel::set_mode(Mode flag) {
+void Channel::set_mode(Mode flag, std::string nick, std::string change) {
     _modes |= flag;
+    send_all(RPL_MODE(nick, _channel_name, change));
 }
 
-void Channel::unset_mode(Mode flag) {
+void Channel::unset_mode(Mode flag, std::string nick, std::string change) {
     _modes &= (~flag);
+    send_all(RPL_MODE(nick, _channel_name, change));
 }
 
 bool Channel::has_mode(Mode flag) const {
@@ -145,4 +147,14 @@ void Channel::give_operator( void )
 	if (is_operator(channel_users[0]->get_fd()))
 		return;
 	add_operator(channel_users[0]);
+}
+
+void Channel::set_limit( int limit )
+{
+    _limit = limit;
+}
+
+int Channel::get_limit( void )
+{
+    return _limit;
 }

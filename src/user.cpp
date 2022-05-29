@@ -127,11 +127,18 @@ int User::is_on_channel( std::string channel_name )
     return -1;
 }
 
-void User::set_mode(UserMode flag) {
+void User::set_mode(UserMode flag, std::string nick, std::string change) {
+    if (nick.size() > 0)
+        adam_sender(_fd, RPL_MODE(nick, _nickname, change));
+    if (flag == UserOper && !has_mode(UserOper))
+        adam_sender(_fd, RPL_YOUREOPER(_nickname));
     _modes |= flag;
 }
 
-void User::unset_mode(UserMode flag) {
+void User::unset_mode(UserMode flag, std::string nick, std::string change) {
+    adam_sender(_fd, RPL_MODE(nick, _nickname, change));
+    if (flag == UserOper && has_mode(UserOper))
+        adam_sender(_fd, RPL_YOURENOTOPER(_nickname));
     _modes &= (~flag);
 }
 

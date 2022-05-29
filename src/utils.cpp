@@ -30,6 +30,27 @@ void split(std::vector<std::string>& dest, int max_args)
     }
 }
 
+std::vector<std::string> split(std::string &str, char sep)
+{
+    std::vector<std::string> result;
+    if (str.find(sep) == std::string::npos)
+        result.push_back(str);
+    while (str.find(sep) != std::string::npos) {
+        if (str.find(sep) == 0){
+            str.erase(0);
+            continue;
+        }
+        else
+            result.push_back(str.substr(0, str.find(sep)));
+        str.erase(0, str.find(sep) + 1);
+        if ((str.find(sep) == std::string::npos)){
+            result.push_back(str);
+            break;
+        }
+    }
+    return result;
+}
+
 int contains_new_line( char buffer[] )
 {
     for (int i = 0; buffer[i] != '\0'; i++) {
@@ -54,6 +75,29 @@ bool    is_nickname_valid( const std::string& nick )
     for (unsigned int i = 0; i < nick.length(); ++i) {
         if (!std::isalnum(nick[i]) && spec.find(nick[i]) == std::string::npos)
             return false;
+    }
+    return true;
+}
+
+bool    is_valid_keys(const std::string& keys, bool mode)
+{
+    if (mode)
+    {
+        for (unsigned int i = 0; i < keys.length(); i++)
+        {
+            if (keys[i] != '+' && keys[i] != '-' && keys[i] != 'o' && keys[i] != 'i'
+                && keys[i] != 'l' && keys[i] != 't')
+                return false;
+        }
+    }
+    else
+    {
+        for (unsigned int i = 0; i < keys.length(); i++)
+        {
+            if (keys[i] != '+' && keys[i] != '-' && keys[i] != 'i' && keys[i] != 's'
+                && keys[i] != 'o' && keys[i] != 'w')
+                return false;
+        }
     }
     return true;
 }

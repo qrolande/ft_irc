@@ -49,6 +49,7 @@
 #define RPL_CHANNELMODEIS(nickname, channel, mode)      (":ircserv 324 " + (nickname) + ' ' + (channel) + " :" + (mode))
 #define RPL_UMODEIS(nickname, user, mode)               (":ircserv 221 " + (nickname) + ' ' + (user) + " :" + (mode))
 #define RPL_YOUREOPER(nickname)                         (":ircserv 381 " + (nickname) + " :You are now an IRC operator")
+#define RPL_YOURENOTOPER(nickname)                      (":ircserv 381 " + (nickname) + " :You are no longer an IRC operator")
 #define RPL_INVITE(nickname, nicknameInvited, channel)  (":ircserv 341 " + (nickname) + ' ' + (nicknameInvited) + " :" + (channel))
 
 #define RPL_QUIT(nickname, message)                     (":ircserv " + (nickname) + " quited :" + (message))
@@ -58,7 +59,7 @@
 #define RPL_PART(nickname, channel, reason)             (":" + (nickname) + " PART " + (channel) + " :" + (reason))
 #define RPL_INVITING(nickname, nicknameInvited, channel)(":" + (nickname) + " INVITE " + (nicknameInvited) + " :" + (channel))
 #define RPL_KICK(nickname, channel, user, reason)       (":" + (nickname) + " KICK " + (channel) + ' ' + (user) + " :" + (reason))
-#define RPL_MODE(nickname, user, changes)               (":" + (nickname) + " MODE " + (user) + " :" + (changes))
+#define RPL_MODE(nickname, user, changes)               (":" + (nickname) + " MODE " + (user) + " " + (changes))
 
 #define ERR_NOSUCHNICK(nickname, nick)                  (":ircserv 401 " + (nickname) + ' ' + (nick) + " :No such nick/channel")
 #define ERR_NOSUCHCHANNEL(nickname, channel)            (":ircserv 403 " + (nickname) + ' ' + (channel) + " :No such channel")

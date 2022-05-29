@@ -46,8 +46,11 @@ public:
     void give_operator( void );
 
 
-    void                            set_mode(Mode);
-    void                            unset_mode(Mode);
+    void set_limit( int limit );
+    int get_limit( void );
+
+    void                            set_mode(Mode, std::string nick, std::string change);
+    void                            unset_mode(Mode, std::string nick, std::string change);
     bool                            has_mode(Mode) const;
     std::string                     show_mode() const;
 };

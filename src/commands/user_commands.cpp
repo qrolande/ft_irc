@@ -79,15 +79,16 @@ void User::away_cmd( std::vector<std::string> cmd )
 
 void User::mode_cmd( std::vector<std::string> cmd )
 {
+	int i;
 	if (cmd.size() == 1)
 		adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, cmd[0]));
 	else
 	{
 		split(cmd, -1);
-		if (server->is_channel_available(cmd[0]) != -1)
-			mode_channel(cmd);
-		else if (server->is_nickname_available(cmd[0]) != -1)
-			mode_user(cmd);
+		if ((i = server->is_channel_available(cmd[0])) != -1)
+			mode_channel(cmd, i);
+		else if ((i = server->is_nickname_available(cmd[0])) != -1)
+			mode_user(cmd, i);
 		else
 		{
 			if (cmd[0][0] == '#')
@@ -98,12 +99,67 @@ void User::mode_cmd( std::vector<std::string> cmd )
 	}
 }
 
-void User::mode_channel( std::vector<std::string> )
+void User::mode_channel( std::vector<std::string> cmd, int i )
 {
+	Channel *channel = server->channels[i];
+	bool mode;
+	if (!channel->is_operator(_fd))
+		adam_sender(_fd, ERR_CHANOPRIVSNEEDED(_nickname, cmd[0]));
+	else if (is_valid_keys(cmd[1], true) && (cmd[1][0] == '+' || cmd[1][0] == '-'))
+	{
+		for (unsigned int i = 0; i < cmd[1].length(); i++)
+		{
+			mode = cmd[1][i] == '+' ? true : cmd[1][i] == '-' ? false : mode;
+			if (cmd[1][i] == 'i')
+				mode ? channel->set_mode(invite_only, get_fullname(), "+invite only")
+					: channel->unset_mode(invite_only, get_fullname(), "-invite only");
+			else if (cmd[1][i] == 't')
+				mode ? channel->set_mode(protectedTopic, get_fullname(), "+protected topic")
+					: channel->unset_mode(protectedTopic, get_fullname(), "-protected topic");
+			else if (cmd[1][i] == 'l')
+			{
+				mode ? channel->set_mode(limited, get_fullname(), "+limited:" + cmd[2])
+					: channel->unset_mode(limited, get_fullname(), "-limited");
+				channel->set_limit(atoi(cmd[2].c_str()));
+			}
+			else if (cmd[1][i] == 'o')
+			{
+				int l = server->is_nickname_available(cmd[cmd.size() - 1]);
+				if (l != -1)
+					channel->add_operator(server->clients[l]);
+			}
+		}
+	}
+	else
+		adam_sender(_fd, ERR_UMODEUNKNOWNFLAG(_nickname));
 
 }
 
-void User::mode_user( std::vector<std::string> )
+void User::mode_user( std::vector<std::string> cmd, int i )
 {
-
+	User *user = server->clients[i];
+	bool mode;
+	if (!has_mode(UserOper))
+		adam_sender(_fd, ERR_NOPRIVILEGES(_nickname));
+	else if (is_valid_keys(cmd[1], false) && (cmd[1][0] == '+' || cmd[1][0] == '-'))
+	{
+		for (unsigned int i = 0; i < cmd[1].length(); i++)
+		{
+			mode = cmd[1][i] == '+' ? true : cmd[1][i] == '-' ? false : mode;
+			if (cmd[1][i] == 'i')
+				mode ? user->set_mode(invisibility, get_fullname(), "+invisibility")
+					: user->unset_mode(invisibility, get_fullname(), "-invisibility");
+			else if (cmd[1][i] == 's')
+				mode ? user->set_mode(silence, get_fullname(), "+silence")
+					: user->unset_mode(silence, get_fullname(), "+silence");
+			else if (cmd[1][i] == 'w')
+				mode ? user->set_mode(wallopsOff, get_fullname(), "+wallopsOff")
+					: user->unset_mode(wallopsOff, get_fullname(), "-wallopsOff");
+			else if (cmd[1][i] == 'o')
+				mode ? user->set_mode(UserOper, get_fullname(), "+operator")
+					: user->unset_mode(UserOper, get_fullname(), "-operator");
+		}
+	}
+	else
+		adam_sender(_fd, ERR_UMODEUNKNOWNFLAG(_nickname));
 }

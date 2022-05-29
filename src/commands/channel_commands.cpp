@@ -113,7 +113,7 @@ void User::topic_cmd( std::vector<std::string> cmd )
 
 void User::kick_cmd( std::vector<std::string> cmd )
 {
-    int i;
+    int i, u = 0;
     split(cmd, -1);
     if (cmd.size() != 2 && cmd.size() != 3)
         adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, cmd[0]));
@@ -123,7 +123,9 @@ void User::kick_cmd( std::vector<std::string> cmd )
         adam_sender(_fd, ERR_NOTONCHANNEL(_nickname, cmd[0]));
     else if (!server->channels[i]->is_operator(_fd))
         adam_sender(_fd, ERR_CHANOPRIVSNEEDED(_nickname, cmd[0]));
-    // else if -- если пользователя не существует вообще или в канале
+    else if ((u = server->is_nickname_available(cmd[1])) == -1
+        || !server->channels[i]->user_in_channel(server->client_socket[u]))
+        adam_sender(_fd, ERR_NOSUCHNICK(_nickname, cmd[1]));
     else
     {
         User *user = server->clients[server->is_nickname_available(cmd[1])];
@@ -134,7 +136,7 @@ void User::kick_cmd( std::vector<std::string> cmd )
 
 void User::invite_cmd( std::vector<std::string> cmd )
 {
-    int i, u;
+    int i, u = 0;
     split(cmd, -1);
     if (cmd.size() != 2)
         adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, "INVITE"));
@@ -149,9 +151,11 @@ void User::invite_cmd( std::vector<std::string> cmd )
         adam_sender(_fd, ERR_CHANOPRIVSNEEDED(_nickname, cmd[1]));
     else
     {
-        server->channels[i]->add_user(server->clients[u]);
-        server->channels[i]->send_all(RPL_INVITING(_nickname, cmd[0], cmd[1]));
-        server->channels[i]->send_all(RPL_INVITE(_nickname, cmd[0], cmd[1]));
+        User *user = server->clients[u];
+        if (user->is_away)
+            adam_sender(_fd, RPL_AWAY(user->get_nickname(), _nickname, user->away_message));
+        else
+            adam_sender(user->get_fd(), RPL_INVITING(get_fullname(), user->get_nickname(), cmd[1]));
     }
 }
 
