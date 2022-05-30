@@ -94,7 +94,7 @@ void Bot::execute() {
             _message = "PRIVMSG " + name + " :available commands 'time', 'banana'";
         }
         else if (req == "banana") {
-            int res = rand() % 35;
+            unsigned int res = rand() % 35;
             _message = "PRIVMSG " + name + " :your banana size is " + std::to_string(res);
             if (res < 10)
                 _message += ", oh poor guy!";
@@ -102,6 +102,11 @@ void Bot::execute() {
                 _message += ", baseball bat killer!";
             else
                 _message += ", regular normal guy!";
+        }
+        else if (req == "time") {
+            time_t now = time(0);
+            char* dt = ctime(&now);
+            _message = "PRIVMSG " + name + " :time now is " + dt;
         }
     }
 }
