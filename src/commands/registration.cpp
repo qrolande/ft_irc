@@ -14,17 +14,37 @@ void User::password_cmd(std::vector<std::string> cmd)
 
 void User::nickname_cmd(std::vector<std::string> cmd)
 {
+    split(cmd, -1);
     if (!is_password_passed)
         adam_sender(_fd, ERR_NOTREGISTERED(_nickname));
-    else if (cmd.size() == 1)
+    else if (cmd.size() == 0)
         adam_sender(_fd, ERR_NONICKNAMEGIVEN(_nickname));
-    else if (!is_nickname_valid(cmd[1]))
-        adam_sender(_fd, ERR_ERRONEUSNICKNAME(_nickname, cmd[1]));
-    else if (server->is_nickname_available(cmd[1]) != -1)
-        adam_sender(_fd, ERR_NICKNAMEINUSE(_nickname, cmd[1]));
+    else if (!is_nickname_valid(cmd[0]))
+        adam_sender(_fd, ERR_ERRONEUSNICKNAME(_nickname, cmd[0]));
+    else if (server->is_nickname_available(cmd[0]) != -1)
+        adam_sender(_fd, ERR_NICKNAMEINUSE(_nickname, cmd[0]));
+    else if (cmd[0] == "bot")
+    {
+       if (cmd.size() == 2)
+       {
+            struct timeval tp;
+            gettimeofday(&tp, NULL);
+            long int ms = tp.tv_sec * 1000 + tp.tv_usec / 1000;
+            long bot_time = atol(cmd[1].c_str());
+            if (ms - bot_time <= 100)
+            {
+                this->_nickname = cmd[0];
+                this->is_nickname_passed = true;
+            }
+            else
+                adam_sender(_fd, ERR_ERRONEUSNICKNAME(_nickname, cmd[0]));
+       }
+        else
+                adam_sender(_fd, ERR_ERRONEUSNICKNAME(_nickname, cmd[0]));
+    }
     else
     {
-        this->_nickname = cmd[1];
+        this->_nickname = cmd[0];
         this->is_nickname_passed = true;
     }
 }

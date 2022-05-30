@@ -18,6 +18,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <map>
+#include <sys/time.h>
 
 
 #define BUFFER_SIZE 1024
@@ -95,5 +96,6 @@
 #define ERR_CHANNELISFULL(nickname, channel)            (":ircserv 471 " + (nickname) + ' ' + (channel) + " :Cannot join channel (+l)")
 #define ERR_INVITEONLYCHAN(nickname, channel)           (":ircserv 473 " + (nickname) + ' ' + (channel) + " :Cannot join channel (+i)")
 #define ERR_NOPRIVILEGES(nickname)                      (":ircserv 481 " + (nickname) + " :Permission Denied- You're not an IRC operator")
+
 
 #endif
