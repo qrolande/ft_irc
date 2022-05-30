@@ -1,5 +1,15 @@
 #include "../incl/global.hpp"
 
+void Error(std::string msg){
+    std::cout << "Error: " << msg << "\n";
+    exit(1);
+}
+
+void Error(std::string msg, Server sever){
+    std::cout << "Error: " << msg << "\n";
+    exit(1);
+}
+
 void split(std::vector<std::string>& dest, const std::string& str)
 {
     unsigned int j, i;
