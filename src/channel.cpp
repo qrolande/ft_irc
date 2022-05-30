@@ -25,7 +25,7 @@ void Channel::send_all( User *user, std::string message, bool flag )
         if (*it != user)
         {
             if (!flag)
-                adam_sender((*it)->get_fd(), RPL_NOTICE(user->get_nickname(), _channel_name, message));
+                adam_sender((*it)->get_fd(), RPL_PRIVMSG(user->get_nickname(), _channel_name, message));
             else
                 adam_sender((*it)->get_fd(), message);
         }

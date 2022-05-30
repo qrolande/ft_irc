@@ -50,8 +50,10 @@ void User::joining(Channel *channel)
     channel->send_all(RPL_JOIN(get_fullname(), channel->get_channel_name()));
     adam_sender(_fd, RPL_TOPIC(_nickname, channel->get_channel_name(), channel->get_topic()));
     for (unsigned int i = 0; i < channel->channel_users.size(); i++)
-        channel->send_all(RPL_NAMREPLY(_nickname, channel->get_channel_name(), server->clients[i]->get_fullname())); //need to rework
-    channel->send_all(RPL_ENDOFNAMES(_nickname, channel->get_channel_name()));
+        for (unsigned int l = 0; l < channel->channel_users.size(); l++)
+            adam_sender(channel->channel_users[i]->get_fd(), RPL_NAMREPLY(channel->channel_users[i]->_nickname, channel->get_channel_name(), server->clients[l]->get_fullname()));
+    for (unsigned int l = 0; l < channel->channel_users.size(); l++)
+            adam_sender(channel->channel_users[l]->get_fd(), RPL_ENDOFNAMES(_nickname, channel->get_channel_name()));
     channels.push_back(channel);
     channel->give_operator();
 }

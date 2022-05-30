@@ -18,7 +18,7 @@ void User::wallops_cmd( std::vector<std::string> cmd )
         adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, cmd[0]));
     else
     {
-        for (int i = 0; i < server->clients.size(); i++)
+        for (unsigned int i = 0; i < server->clients.size(); i++)
         {
             User *user = server->clients[i];
             if (user->_fd != _fd && user->has_mode(UserOper) && !user->has_mode(wallopsOff))
