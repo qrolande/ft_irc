@@ -50,12 +50,21 @@ void User::privmsg_cmd(std::vector<std::string> cmd)
 	}
 	else if ((i = server->is_nickname_available(cmd[0])) == -1)
 		adam_sender(_fd, ERR_NOSUCHNICK(_nickname, cmd[0]));
-	else if (server->clients[i]->is_away && command == "PRIVMSG")
-		adam_sender(_fd, RPL_AWAY(_nickname, cmd[0], server->clients[i]->away_message));
+	else if (server->clients[i]->is_away)
+	{
+		if (command == "PRIVMSG")
+			adam_sender(_fd, RPL_AWAY(_nickname, cmd[0], server->clients[i]->away_message));
+	}
+	else if (server->clients[i]->has_mode(silence) && command == "NOTICE")
+		return;
 	else
 	{
-		adam_sender(server->clients[i]->_fd, RPL_PRIVMSG(_nickname,
-			cmd[0], cmd[1][0] == ':' ? cmd[1].substr(1) : cmd[1]));
+		if (command == "PRIVMSG")
+			adam_sender(server->clients[i]->_fd, RPL_PRIVMSG(_nickname,
+				cmd[0], cmd[1][0] == ':' ? cmd[1].substr(1) : cmd[1]));
+		else
+			adam_sender(server->clients[i]->_fd, RPL_NOTICE(_nickname,
+				cmd[0], cmd[1][0] == ':' ? cmd[1].substr(1) : cmd[1]));
 	}
 	
 }
@@ -111,15 +120,15 @@ void User::mode_channel( std::vector<std::string> cmd, int i )
 		{
 			mode = cmd[1][i] == '+' ? true : cmd[1][i] == '-' ? false : mode;
 			if (cmd[1][i] == 'i')
-				mode ? channel->set_mode(invite_only, get_fullname(), "+invite only")
-					: channel->unset_mode(invite_only, get_fullname(), "-invite only");
+				mode ? channel->set_mode(invite_only, get_fullname(), "+i")
+					: channel->unset_mode(invite_only, get_fullname(), "-i");
 			else if (cmd[1][i] == 't')
-				mode ? channel->set_mode(protectedTopic, get_fullname(), "+protected topic")
-					: channel->unset_mode(protectedTopic, get_fullname(), "-protected topic");
+				mode ? channel->set_mode(protectedTopic, get_fullname(), "+p")
+					: channel->unset_mode(protectedTopic, get_fullname(), "-p");
 			else if (cmd[1][i] == 'l')
 			{
-				mode ? channel->set_mode(limited, get_fullname(), "+limited:" + cmd[2])
-					: channel->unset_mode(limited, get_fullname(), "-limited");
+				mode ? channel->set_mode(limited, get_fullname(), "+l:" + cmd[2])
+					: channel->unset_mode(limited, get_fullname(), "-l");
 				channel->set_limit(atoi(cmd[2].c_str()));
 			}
 			else if (cmd[1][i] == 'o')
@@ -147,17 +156,17 @@ void User::mode_user( std::vector<std::string> cmd, int i )
 		{
 			mode = cmd[1][i] == '+' ? true : cmd[1][i] == '-' ? false : mode;
 			if (cmd[1][i] == 'i')
-				mode ? user->set_mode(invisibility, get_fullname(), "+invisibility")
-					: user->unset_mode(invisibility, get_fullname(), "-invisibility");
+				mode ? user->set_mode(invisibility, get_fullname(), "+i")
+					: user->unset_mode(invisibility, get_fullname(), "-i");
 			else if (cmd[1][i] == 's')
-				mode ? user->set_mode(silence, get_fullname(), "+silence")
-					: user->unset_mode(silence, get_fullname(), "+silence");
+				mode ? user->set_mode(silence, get_fullname(), "+s")
+					: user->unset_mode(silence, get_fullname(), "+s");
 			else if (cmd[1][i] == 'w')
-				mode ? user->set_mode(wallopsOff, get_fullname(), "+wallopsOff")
-					: user->unset_mode(wallopsOff, get_fullname(), "-wallopsOff");
+				mode ? user->set_mode(wallopsOff, get_fullname(), "+w")
+					: user->unset_mode(wallopsOff, get_fullname(), "-w");
 			else if (cmd[1][i] == 'o')
-				mode ? user->set_mode(UserOper, get_fullname(), "+operator")
-					: user->unset_mode(UserOper, get_fullname(), "-operator");
+				mode ? user->set_mode(UserOper, get_fullname(), "+o")
+					: user->unset_mode(UserOper, get_fullname(), "-o");
 		}
 	}
 	else

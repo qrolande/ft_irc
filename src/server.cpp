@@ -195,5 +195,4 @@ void Server::give_operator( void )
 	if (users.size() == 0 || users[0]->has_mode(UserOper))
 		return;
 	users[0]->set_mode(UserOper, "", "");
-	std::cout << users[0]->has_mode(UserOper) << std::endl;
 }

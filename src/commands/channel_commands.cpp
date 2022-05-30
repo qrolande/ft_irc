@@ -31,8 +31,12 @@ void User::join_cmd( std::vector<std::string> cmd )
                 server->channels.push_back(channel);
                 i = server->channels.size() - 1;
                 std::cout << "Channel: " << server->channels[i]->get_channel_name() << " created" << std::endl;
-            }
-            if (!server->channels[i]->user_in_channel(_fd))
+            };
+            if (server->channels[i]->has_mode(invite_only))
+                adam_sender(_fd, ERR_INVITEONLYCHAN(_nickname, cmd[0]));
+            else if (server->channels[i]->has_mode(limited) && !server->channels[i]->has_empty_place())
+                adam_sender(_fd, ERR_CHANNELISFULL(_nickname, cmd[0]));
+            else if (!server->channels[i]->user_in_channel(_fd))
                 joining(server->channels[i]);
             else 
                 adam_sender(_fd, ERR_USERONCHANNEL(_nickname, _username, server->channels[i]->get_channel_name()));

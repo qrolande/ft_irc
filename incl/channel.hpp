@@ -17,7 +17,6 @@ private:
     std::string _channel_name;
     std::string _topic;
     Server *_server;
-    int users_count;
     int                                     _modes;
     int                                     _limit;
 
@@ -48,6 +47,7 @@ public:
 
     void set_limit( int limit );
     int get_limit( void );
+    bool has_empty_place( void );
 
     void                            set_mode(Mode, std::string nick, std::string change);
     void                            unset_mode(Mode, std::string nick, std::string change);

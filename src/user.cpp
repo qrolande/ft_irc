@@ -21,6 +21,7 @@ User::User(int fd, Server *_server) : _fd(fd), server(_server) {
     functions["MODE"] = &User::mode_cmd;
     functions["KICK"] = &User::kick_cmd;
     functions["INVITE"] = &User::invite_cmd;
+    functions["WALLOPS"] = &User::wallops_cmd;
 }
 
 User & User::operator=(const User & src)

@@ -84,7 +84,7 @@ public:
     void topic_cmd( std::vector<std::string> cmd );
     void kick_cmd( std::vector<std::string> cmd );
     void invite_cmd( std::vector<std::string> cmd );
-
+    void wallops_cmd( std::vector<std::string> cmd );
 
     void mode_cmd( std::vector<std::string> cmd );
     void mode_channel( std::vector<std::string> cmd, int i );

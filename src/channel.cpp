@@ -1,6 +1,6 @@
 #include "../incl/global.hpp"
 
-Channel::Channel(std::string channel_name, Server *server) : _channel_name(channel_name) , _server(server) {}
+Channel::Channel(std::string channel_name, Server *server) : _channel_name(channel_name) , _server(server), _modes(0) {}
 
 std::string Channel::get_channel_name( void )
 {
@@ -14,8 +14,7 @@ void Channel::add_user( User *user )
 
 int Channel::get_users_count(void) 
 {
-    users_count = channel_users.size();
-    return (users_count);
+    return (channel_users.size());
 }
 
 void Channel::send_all( User *user, std::string message, bool flag )
@@ -26,7 +25,7 @@ void Channel::send_all( User *user, std::string message, bool flag )
         if (*it != user)
         {
             if (!flag)
-                adam_sender((*it)->get_fd(), RPL_PRIVMSG(user->get_nickname(), _channel_name, message));
+                adam_sender((*it)->get_fd(), RPL_NOTICE(user->get_nickname(), _channel_name, message));
             else
                 adam_sender((*it)->get_fd(), message);
         }
@@ -157,4 +156,11 @@ void Channel::set_limit( int limit )
 int Channel::get_limit( void )
 {
     return _limit;
+}
+
+bool Channel::has_empty_place( void )
+{
+    if (has_mode(limited) && _limit - get_users_count() <= 0)
+        return false;
+    return true;
 }
