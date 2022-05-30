@@ -96,10 +96,13 @@ void Bot::execute() {
         request.erase(0, request.find(":") + 1);
         std::string req = request.substr(0, request.find("\r"));
         if (req.size() == 0) {
-            _message = "PRIVMSG " + name + " :available commands 'time', 'banana'";
+            _message = "PRIVMSG " + name + " :available commands 'time', 'banana', '?'";
         }
         else if (req == "banana") {
-            unsigned int res = rand() % 35;
+            struct timeval tp;
+            gettimeofday(&tp, NULL);
+            long int ms = tp.tv_sec * 1000 + tp.tv_usec / 1000;
+            unsigned int res = ms % 35;
             _message = "PRIVMSG " + name + " :your banana size is " + std::to_string(res);
             if (res < 10)
                 _message += ", oh poor guy!";
@@ -112,6 +115,17 @@ void Bot::execute() {
             time_t now = time(0);
             char* dt = ctime(&now);
             _message = "PRIVMSG " + name + " :time now is " + dt;
+        }
+        else if (req.find("?")) {
+            struct timeval tp;
+            gettimeofday(&tp, NULL);
+            long int ms = tp.tv_sec * 1000 + tp.tv_usec / 1000;
+            unsigned int res = ms % 3;
+            std::cout << res << std::endl;
+            if (res > 1)
+                _message = "PRIVMSG " + name + " :Yes";
+            else
+                _message = "PRIVMSG " + name + " :No";
         }
     }
 }
