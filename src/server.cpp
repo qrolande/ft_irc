@@ -8,15 +8,14 @@ void Server::start()
 {
 	sockaddr_in address;
  
-	if( (_listening = socket(AF_INET , SOCK_STREAM , 0)) == 0)  
+	if ((_listening = socket(AF_INET , SOCK_STREAM , 0)) == 0)  
 	{  
 		perror("socket failed");  //ERROR
 		exit(EXIT_FAILURE);  
 	}
 
 	int opt = 1;
-	if( setsockopt(_listening, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, 
-		  sizeof(opt)) < 0 )  
+	if (setsockopt(_listening, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0 )  
 	{
 		perror("setsockopt");  //ERROR
 		exit(EXIT_FAILURE);  
@@ -195,4 +194,15 @@ void Server::give_operator( void )
 	if (users.size() == 0 || users[0]->has_mode(UserOper))
 		return;
 	users[0]->set_mode(UserOper, "", "");
+}
+
+void Server::exiting( void )
+{
+	for (unsigned int i = 0; i < client_socket.size(); i++)
+		if (client_socket[i] != 0)
+			close(client_socket[i]);
+	for (unsigned int i = 0; i < clients.size(); i++)
+		if (clients[i] != nullptr)
+			delete clients[i];
+	close(_listening);
 }

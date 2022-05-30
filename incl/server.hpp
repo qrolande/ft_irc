@@ -34,6 +34,8 @@ public:
 	void remove_channel( std::string _channel_name );
 
 	void give_operator();
+
+	void exiting();
 };
 
 #endif
