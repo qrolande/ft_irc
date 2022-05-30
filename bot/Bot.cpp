@@ -36,8 +36,11 @@ Bot::~Bot() {
 }
 
 void Bot::start(){
+    struct timeval tp;
+    gettimeofday(&tp, NULL);
+    long int ms = tp.tv_sec * 1000 + tp.tv_usec / 1000;
     _message = "PASS " + _pass + "\r\n"\
-    "NICK " + _name + "\r\n"\
+    "NICK " + _name + " " + std::to_string(ms) + "\r\n"\
     "USER bot bot bot :work work \r\n";
     while (true){
         message_sendler();
