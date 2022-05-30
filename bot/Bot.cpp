@@ -1,15 +1,9 @@
 #include "Bot.hpp"
 
-void adam_sender(int fd, std::string message)
+static void adam_sender(int fd, std::string message)
 {
     send(fd, message.c_str(), strlen(message.c_str()), 0);
     send(fd, "\r\n", 2, 0);
-    // std::cout << message << std::endl;
-}
-
-static void Error(std::string msg){
-    std::cout << "Error: " << msg << "\n";
-    exit(1);
 }
 
 Bot::Bot(std::string port, std::string pass):
@@ -64,7 +58,7 @@ void Bot::get_buff(){
 	if ((Bytes = recv(_BotSocket, &buff, BUFFER_SIZE - 1, 0)) >= 0)
 		_new_buff += buff;
     if (Bytes == 0)
-        exit(1);
+        Error("server is not available!");
 }
 
 std::string Bot::getRequest() {
