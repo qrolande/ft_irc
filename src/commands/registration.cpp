@@ -15,6 +15,7 @@ void User::password_cmd(std::vector<std::string> cmd)
 void User::nickname_cmd(std::vector<std::string> cmd)
 {
     split(cmd, -1);
+    cmd[0] = to_lower(cmd[0]);
     if (!is_password_passed)
         adam_sender(_fd, ERR_NOTREGISTERED(_nickname));
     else if (cmd.size() == 0)
@@ -56,6 +57,10 @@ void User::username_cmd(std::vector<std::string> cmd)
         adam_sender(_fd, ERR_NOTREGISTERED(_nickname));
         return;
     }
+    if (is_username_passed)
+        adam_sender(_fd, ERR_ALREADYREGISTRED(_nickname));
+    if (cmd.size() == 2)
+        cmd[1] = to_lower(cmd[1]);
     split(cmd, 4);
     if (cmd.size() != 4)
         adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, cmd[0]));

@@ -32,6 +32,21 @@ void Channel::send_all( User *user, std::string message, bool flag )
     }
 }
 
+void Channel::send_all_n( User *user, std::string message, bool flag )
+{
+    std::vector<User *>::iterator it;
+    for (it = channel_users.begin(); it != channel_users.end(); ++it)
+    {
+        if (*it != user)
+        {
+            if (!flag)
+                adam_sender((*it)->get_fd(), RPL_NOTICE(user->get_nickname(), _channel_name, message));
+            else
+                adam_sender((*it)->get_fd(), message);
+        }
+    }
+}
+
 void Channel::send_all( std::string message )
 {
     std::vector<User *>::iterator it;
@@ -163,4 +178,16 @@ bool Channel::has_empty_place( void )
     if (has_mode(limited) && _limit - get_users_count() <= 0)
         return false;
     return true;
+}
+
+void Channel::delete_operator( User *user )
+{
+    for (unsigned int i = 0; i < operators.size(); i++)
+    {
+        if (operators[i] == user)
+        {
+            operators.erase(operators.begin() + i);
+            return;
+        }
+    }
 }
