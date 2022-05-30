@@ -60,6 +60,8 @@ void Bot::get_buff(){
     bzero(&buff, sizeof(buff));
 	if ((Bytes = recv(_BotSocket, &buff, BUFFER_SIZE - 1, 0)) >= 0)
 		_new_buff += buff;
+    if (Bytes == 0)
+        exit(1);
 }
 
 std::string Bot::getRequest() {
