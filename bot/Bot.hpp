@@ -5,8 +5,8 @@
 class Bot {
 private:
 	std::string _name;
-    std::string _port;
-    std::string _pass;
+	std::string _port;
+	std::string _pass;
 	std::string _message;
 	std::string _new_buff;
 	std::string _request_flag;

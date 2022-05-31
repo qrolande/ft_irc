@@ -20,22 +20,22 @@ public:
 	std::vector<User *>			users;
 
 	Server(int port);
-	void start();
-	void main_loop(sockaddr_in address);
+	void						start();
+	void						main_loop(sockaddr_in address);
 
-	int is_nickname_available( std::string nickname );
-	bool is_username_available( std::string username );
+	int							is_nickname_available( std::string nickname );
+	bool						is_username_available( std::string username );
 
-	int is_channel_available( std::string channel_name );
+	int							is_channel_available( std::string channel_name );
 
-	int get_count_connects();
+	int							get_count_connects();
 
-	void remove_one_connect( void );
-	void remove_channel( std::string _channel_name );
+	void						remove_one_connect( void );
+	void						remove_channel( std::string _channel_name );
 
-	void give_operator();
+	void						give_operator();
 
-	void exiting();
+	void						exiting();
 };
 
 #endif
