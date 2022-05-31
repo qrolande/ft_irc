@@ -102,6 +102,8 @@ void Server::main_loop(sockaddr_in address)
 				}
 				else
 				{
+					std::cout << valread << std::endl;
+					buffer[valread] = '\0';
 					std::cout << buffer << std::endl;
 					user->parse_command(buffer);
 				}

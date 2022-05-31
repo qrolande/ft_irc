@@ -76,9 +76,17 @@ void User::buffer_copy( char command[] )
 {
 	int i = 0;
 	for (; this->buffer[i] != '\0'; i++);
-	for (int j = 0; command[j] != '\0' && i < BUFFER_SIZE; j++, i++)
+	for (int j = 0; command[j] != '\0'; j++, i++)
 		this->buffer[i] = command[j];
 	this->buffer[i] = '\0';
+}
+
+void User::buffer_move( char buffer[], int i )
+{
+	int j;
+	for (j = 0; i < BUFFER_SIZE * 2; j++, i++)
+		buffer[j] = buffer[i];
+	buffer[j] = '\0';
 }
 
 void User::parse_command( char command[] )
@@ -96,8 +104,10 @@ void User::parse_command( char command[] )
 			work_with_command(parsed);
 		for (j = i + j + 1; buffer[j] == '\r' || buffer[j] == '\n'; j++);
 		parsed.clear();
+		buffer_move(buffer, j);
+		j = 0;
 	}
-	memset(this->buffer, '\0', BUFFER_SIZE);
+	memset(this->buffer, '\0', BUFFER_SIZE * 2);
 }
 
 void User::work_with_command( std::vector<std::string> parsed )

@@ -52,7 +52,9 @@ public:
 
 	User							& operator=(const User &);
 
-	char							buffer[BUFFER_SIZE];
+	char							buffer[BUFFER_SIZE * 2];
+
+	void							buffer_move( char buffer[], int i );
 
 	bool							is_authorized( void );
 	void 							set_nickname( std::string nickname );
