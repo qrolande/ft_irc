@@ -136,12 +136,14 @@ std::string Channel::show_mode() const {
     return show.empty() ? "" : '+' + show;
 }
 
-void Channel::add_operator(User *user)
+void Channel::add_operator(User *user, std::string nick)
 {
     for (unsigned int i = 0; i < operators.size(); i++)
         if (operators[i] == user)
             return;
     operators.push_back(user);
+    if (nick.length() != 0)
+        send_all(RPL_MODE(nick, _channel_name, "+o:" + user->get_nickname()));
 }
 
 bool Channel::is_operator( int fd )
@@ -160,7 +162,7 @@ void Channel::give_operator( void )
 {
 	if (is_operator(channel_users[0]->get_fd()))
 		return;
-	add_operator(channel_users[0]);
+	add_operator(channel_users[0], "");
 }
 
 void Channel::set_limit( int limit )
@@ -180,13 +182,14 @@ bool Channel::has_empty_place( void )
     return true;
 }
 
-void Channel::delete_operator( User *user )
+void Channel::delete_operator( User *user, std::string nick )
 {
     for (unsigned int i = 0; i < operators.size(); i++)
     {
         if (operators[i] == user)
         {
             operators.erase(operators.begin() + i);
+            send_all(RPL_MODE(nick, _channel_name, "-o:" + user->get_nickname()));
             return;
         }
     }

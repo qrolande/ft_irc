@@ -39,8 +39,8 @@ public:
 
     void remove_client(int fd);
 
-    void add_operator(User *user);
-    void delete_operator(User *user);
+    void add_operator(User *user, std::string nick);
+    void delete_operator(User *user, std::string nick);
 
     bool is_operator( int fd );
 
