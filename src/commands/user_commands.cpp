@@ -31,7 +31,7 @@ void User::privmsg_cmd(std::vector<std::string> cmd)
 {
 	if (!is_authorized())
 	{
-        adam_sender(_fd, ERR_NOTREGISTERED(_nickname));
+		adam_sender(_fd, ERR_NOTREGISTERED(_nickname));
 		return;
 	}
 	int i;
@@ -74,7 +74,7 @@ void User::privmsg_cmd(std::vector<std::string> cmd)
 void User::away_cmd( std::vector<std::string> cmd )
 {
 	if (!is_authorized())
-        adam_sender(_fd, ERR_NOTREGISTERED(_nickname));
+		adam_sender(_fd, ERR_NOTREGISTERED(_nickname));
 	else if (cmd.size() == 1)
 	{
 		adam_sender(_fd, RPL_UNAWAY(_nickname));
