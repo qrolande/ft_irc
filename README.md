@@ -5,3 +5,19 @@ IRC (англ. Internet Relay Chat) — протокол прикладного 
 IRC использует транспортный протокол TCP и криптографический TLS (опционально).
 Ввиду технической простоты реализации протокол IRC в свое время стал использоваться при организации ботнетов в качестве средства передачи управляющих команд компьютерам - участникам ботнета от владельца.
 Командный проект
+
+
+## How to run server
+Use **make** rule to compile the program. Run it with port and password
+``` 
+make && ./ircserv [port] [password]
+``` 
+
+
+## How to run bot
+```
+cd bot && make
+```
+```
+./bot [port] [password]
+```
