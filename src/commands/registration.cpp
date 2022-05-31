@@ -66,6 +66,17 @@ void User::username_cmd(std::vector<std::string> cmd)
 		adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, cmd[0]));
 	else if (!server->is_username_available(cmd[0]))
 		adam_sender(_fd, ERR_ALREADYREGISTRED(cmd[0]));
+	else if (cmd[0] == "bot")
+	{
+		if (this->_nickname == "bot")
+		{
+			this->_username = cmd[0];
+			this->_realname = cmd[3][0] == ':' ? cmd[3].substr(1) : cmd[3];
+			is_username_passed = true;
+		}
+		else
+			adam_sender(_fd, ERR_ERRONEUSNICKNAME2(_username, cmd[0]));
+	}
 	else
 	{
 		this->_username = cmd[0];
