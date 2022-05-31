@@ -135,16 +135,28 @@ void User::mode_channel( std::vector<std::string> cmd, int i )
 			}
 			else if (cmd[1][i] == 'o')
 			{
-				int l = server->is_nickname_available(cmd[cmd.size() - 1]);
-				if (l != -1)
+				if (cmd.size() == 2)
 				{
-					if (mode && !channel->is_operator(server->client_socket[i]))
-						channel->add_operator(server->clients[l]);
-					// else if (!mode && channel->is_operator(server->client_socket[i]))
-					// 	channel->delete_operator(server->clients[l]);
+					if (mode)
+						channel->set_mode(oper, _nickname, "+o");
+					else
+						channel->unset_mode(oper, _nickname, "-o");
 				}
 				else
-					adam_sender(_fd, ERR_NOSUCHNICK(_nickname, cmd[cmd.size() - 1]));
+				{
+					int l = server->is_nickname_available(cmd[cmd.size() - 1]);
+					if (l != -1)
+					{
+						if (channel->has_mode(oper) && mode && !channel->is_operator(server->client_socket[l]))
+							channel->add_operator(server->clients[l], _nickname);
+						else if (channel->has_mode(oper) && !mode && channel->is_operator(server->client_socket[l]))
+							channel->delete_operator(server->clients[l], _nickname);
+						else
+							adam_sender(_fd, ERR_CHANOPRIVSNEEDED2(_nickname, cmd[0]));
+					}
+					else
+						adam_sender(_fd, ERR_NOSUCHNICK(_nickname, cmd[cmd.size() - 1]));
+				}
 			}
 		}
 	}
