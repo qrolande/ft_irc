@@ -21,6 +21,7 @@ void User::join_cmd( std::vector<std::string> cmd )
         adam_sender(_fd, ERR_NEEDMOREPARAMS(_nickname, cmd[0]));
     else {
         split(cmd, 2);
+        cmd[0] = to_lower(cmd[0]);
         if (!is_valid_chanell(cmd[0]))
             adam_sender(_fd, ERR_NOSUCHCHANNEL(_nickname, cmd[0]));
         else {
@@ -50,8 +51,13 @@ void User::joining(Channel *channel)
     channel->send_all(RPL_JOIN(get_fullname(), channel->get_channel_name()));
     adam_sender(_fd, RPL_TOPIC(_nickname, channel->get_channel_name(), channel->get_topic()));
     for (unsigned int i = 0; i < channel->channel_users.size(); i++)
+    {
         for (unsigned int l = 0; l < channel->channel_users.size(); l++)
-            adam_sender(channel->channel_users[i]->get_fd(), RPL_NAMREPLY(channel->channel_users[i]->_nickname, channel->get_channel_name(), server->clients[l]->get_fullname()));
+        {
+            if (!channel->channel_users[l]->has_mode(invisibility))
+                adam_sender(channel->channel_users[i]->get_fd(), RPL_NAMREPLY(channel->channel_users[i]->_nickname, channel->get_channel_name(), server->clients[l]->get_fullname()));
+        }
+    }
     for (unsigned int l = 0; l < channel->channel_users.size(); l++)
             adam_sender(channel->channel_users[l]->get_fd(), RPL_ENDOFNAMES(_nickname, channel->get_channel_name()));
     channels.push_back(channel);

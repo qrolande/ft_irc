@@ -16,7 +16,6 @@ private:
 	int 		Bytes;
 public:
 	Bot(std::string, std::string);
-    ~Bot();
 
 	void start();
 	void message_sendler();
