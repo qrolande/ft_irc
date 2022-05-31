@@ -5,13 +5,13 @@
 class Bot {
 private:
 	std::string 	_name;
-    std::string 	_port;
-    std::string 	_pass;
+	std::string 	_port;
+	std::string 	_pass;
 	std::string 	_message;
 	std::string 	_new_buff;
 	std::string 	_request_flag;
 	std::string 	request;
-	bool        	_auth_confirmed;
+	bool			_auth_confirmed;
 	int 			_BotSocket;
 	int 			Bytes;
 public:

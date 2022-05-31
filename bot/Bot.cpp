@@ -111,7 +111,6 @@ void Bot::execute() {
 			gettimeofday(&tp, NULL);
 			long int ms = tp.tv_sec * 1000 + tp.tv_usec / 1000;
 			unsigned int res = ms % 3;
-			std::cout << res << std::endl;
 			if (res > 1)
 				_message = "PRIVMSG " + name + " :Yes";
 			else
