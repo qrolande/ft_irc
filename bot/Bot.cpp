@@ -1,6 +1,6 @@
 #include "Bot.hpp"
 
-static void adam_sender(int fd, std::string message)
+void adam_sender(int fd, std::string message)
 {
     send(fd, message.c_str(), strlen(message.c_str()), 0);
     send(fd, "\r\n", 2, 0);
@@ -22,11 +22,6 @@ Bot::Bot(std::string port, std::string pass):
     }
     fcntl(_BotSocket, F_SETFL, O_NONBLOCK);
     _auth_confirmed = false;
-}
-
-Bot::~Bot() {
-	std::cout << "bye\n";
-    close(_BotSocket);
 }
 
 void Bot::start(){
@@ -74,6 +69,7 @@ void Bot::request_parser() {
         _request_flag = "PRIVMSG";
     } else if (request.find("Welcome to the IRCServ, bot") != std::string::npos){
         _auth_confirmed = true;
+        std::cout << "Connection to server is successful" << std::endl;
         _request_flag = "SKIP";
 	} else if (request.find(":ircserv 464") != std::string::npos || request.find(":ircserv 451") != std::string::npos || request.find("You have not registered") != std::string::npos){
         Error("incorrect password!");

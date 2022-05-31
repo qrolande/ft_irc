@@ -45,8 +45,10 @@ void User::privmsg_cmd(std::vector<std::string> cmd)
 	{
 		if (!server->channels[i]->user_in_channel(_fd))
 			adam_sender(_fd, ERR_NOTONCHANNEL(_nickname, cmd[0]));
-		else
+		else if (command == "PRIVMSG")
 			server->channels[i]->send_all(this, cmd[1][0] == ':' ? cmd[1].substr(1) : cmd[1], false);
+		else
+			server->channels[i]->send_all_n(this, cmd[1][0] == ':' ? cmd[1].substr(1) : cmd[1], false);
 	}
 	else if ((i = server->is_nickname_available(cmd[0])) == -1)
 		adam_sender(_fd, ERR_NOSUCHNICK(_nickname, cmd[0]));
@@ -123,8 +125,8 @@ void User::mode_channel( std::vector<std::string> cmd, int i )
 				mode ? channel->set_mode(invite_only, get_fullname(), "+i")
 					: channel->unset_mode(invite_only, get_fullname(), "-i");
 			else if (cmd[1][i] == 't')
-				mode ? channel->set_mode(protectedTopic, get_fullname(), "+p")
-					: channel->unset_mode(protectedTopic, get_fullname(), "-p");
+				mode ? channel->set_mode(protectedTopic, get_fullname(), "+t")
+					: channel->unset_mode(protectedTopic, get_fullname(), "-t");
 			else if (cmd[1][i] == 'l')
 			{
 				mode ? channel->set_mode(limited, get_fullname(), "+l:" + cmd[2])
@@ -133,9 +135,28 @@ void User::mode_channel( std::vector<std::string> cmd, int i )
 			}
 			else if (cmd[1][i] == 'o')
 			{
-				int l = server->is_nickname_available(cmd[cmd.size() - 1]);
-				if (l != -1)
-					channel->add_operator(server->clients[l]);
+				if (cmd.size() == 2)
+				{
+					if (mode)
+						channel->set_mode(oper, _nickname, "+o");
+					else
+						channel->unset_mode(oper, _nickname, "-o");
+				}
+				else
+				{
+					int l = server->is_nickname_available(cmd[cmd.size() - 1]);
+					if (l != -1)
+					{
+						if (channel->has_mode(oper) && mode && !channel->is_operator(server->client_socket[l]))
+							channel->add_operator(server->clients[l], _nickname);
+						else if (channel->has_mode(oper) && !mode && channel->is_operator(server->client_socket[l]))
+							channel->delete_operator(server->clients[l], _nickname);
+						else
+							adam_sender(_fd, ERR_CHANOPRIVSNEEDED2(_nickname, cmd[0]));
+					}
+					else
+						adam_sender(_fd, ERR_NOSUCHNICK(_nickname, cmd[cmd.size() - 1]));
+				}
 			}
 		}
 	}

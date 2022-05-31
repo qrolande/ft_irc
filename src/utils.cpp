@@ -1,12 +1,15 @@
 #include "../incl/global.hpp"
 
-void Error(std::string msg){
+void Error(std::string msg)
+{
     std::cout << "Error: " << msg << "\n";
     exit(1);
 }
 
-void Error(std::string msg, Server sever){
+void Error(std::string msg, Server *sever)
+{
     std::cout << "Error: " << msg << "\n";
+    sever->exiting();
     exit(1);
 }
 
@@ -110,4 +113,18 @@ bool    is_valid_keys(const std::string& keys, bool mode)
         }
     }
     return true;
+}
+
+std::string to_lower(std::string str){
+    std::string::iterator start, end;
+
+    start = str.begin();
+    end = str.end();
+
+    while (start != end) {
+        if ((*start) >= 'A' && (*start) <= 'Z')
+            (*start) += 32;
+        start++;
+    }
+    return str;
 }

@@ -32,6 +32,21 @@ void Channel::send_all( User *user, std::string message, bool flag )
     }
 }
 
+void Channel::send_all_n( User *user, std::string message, bool flag )
+{
+    std::vector<User *>::iterator it;
+    for (it = channel_users.begin(); it != channel_users.end(); ++it)
+    {
+        if (*it != user)
+        {
+            if (!flag)
+                adam_sender((*it)->get_fd(), RPL_NOTICE(user->get_nickname(), _channel_name, message));
+            else
+                adam_sender((*it)->get_fd(), message);
+        }
+    }
+}
+
 void Channel::send_all( std::string message )
 {
     std::vector<User *>::iterator it;
@@ -121,12 +136,14 @@ std::string Channel::show_mode() const {
     return show.empty() ? "" : '+' + show;
 }
 
-void Channel::add_operator(User *user)
+void Channel::add_operator(User *user, std::string nick)
 {
     for (unsigned int i = 0; i < operators.size(); i++)
         if (operators[i] == user)
             return;
     operators.push_back(user);
+    if (nick.length() != 0)
+        send_all(RPL_MODE(nick, _channel_name, "+o:" + user->get_nickname()));
 }
 
 bool Channel::is_operator( int fd )
@@ -145,7 +162,7 @@ void Channel::give_operator( void )
 {
 	if (is_operator(channel_users[0]->get_fd()))
 		return;
-	add_operator(channel_users[0]);
+	add_operator(channel_users[0], "");
 }
 
 void Channel::set_limit( int limit )
@@ -163,4 +180,17 @@ bool Channel::has_empty_place( void )
     if (has_mode(limited) && _limit - get_users_count() <= 0)
         return false;
     return true;
+}
+
+void Channel::delete_operator( User *user, std::string nick )
+{
+    for (unsigned int i = 0; i < operators.size(); i++)
+    {
+        if (operators[i] == user)
+        {
+            operators.erase(operators.begin() + i);
+            send_all(RPL_MODE(nick, _channel_name, "-o:" + user->get_nickname()));
+            return;
+        }
+    }
 }

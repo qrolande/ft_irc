@@ -35,10 +35,12 @@ public:
 
     void send_all( User *user, std::string message, bool flag );
     void send_all(std::string message);
+    void send_all_n( User *user, std::string message, bool flag );
 
     void remove_client(int fd);
 
-    void add_operator(User *user);
+    void add_operator(User *user, std::string nick);
+    void delete_operator(User *user, std::string nick);
 
     bool is_operator( int fd );
 

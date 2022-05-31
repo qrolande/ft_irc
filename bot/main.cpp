@@ -1,5 +1,10 @@
-#include "../incl/global.hpp"
 #include "Bot.hpp"
+
+void Error(std::string msg)
+{
+    std::cout << "Error: " << msg << "\n";
+    exit(1);
+}
 
 int main(int argc, char *argv[]){
     if (argc != 3){
