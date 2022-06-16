@@ -12,7 +12,18 @@ Use **make** rule to compile the program. Run it with port and password
 ``` 
 make && ./ircserv [port] [password]
 ``` 
+to connect -> nc localhost [port] -> then you need to enter: 
+```
+PASS [password]
 
+NICK [any nickname]
+
+USER 1 2 3 4 (this 4 arguments is needed to finish registration)
+```
+send message:
+```
+PRIVMSG [nick] : any text
+```
 
 ## How to run bot
 ```
